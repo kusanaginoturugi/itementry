@@ -1,0 +1,8 @@
+<% content_for :title, "レシート登録" %>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h4 mb-0">レシート登録</h1>
+  <%= link_to "一覧へ戻る", receipts_path, class: "btn btn-outline-secondary" %>
+</div>
+
+<%= render "form", receipt: @receipt %>

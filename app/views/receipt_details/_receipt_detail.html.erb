@@ -1,0 +1,33 @@
+<div id="<%= dom_id receipt_detail %>" class="card shadow-sm">
+  <div class="card-body">
+    <div class="row mb-3">
+      <div class="col-6">
+        <p class="text-muted mb-1">商品ID</p>
+        <p class="h6 mb-0"><%= receipt_detail.item_id %></p>
+      </div>
+      <div class="col-6">
+        <p class="text-muted mb-1">商品名</p>
+        <p class="h6 mb-0"><%= receipt_detail.item_name %></p>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-4">
+        <p class="text-muted mb-1">個数</p>
+        <p class="h5 mb-0"><%= receipt_detail.count %></p>
+      </div>
+      <div class="col-4">
+        <p class="text-muted mb-1">単価</p>
+        <p class="h5 mb-0"><%= number_with_delimiter(receipt_detail.value) %></p>
+      </div>
+      <div class="col-4">
+        <p class="text-muted mb-1">小計</p>
+        <p class="h5 mb-0"><%= number_with_delimiter(receipt_detail.sum_value) %></p>
+      </div>
+    </div>
+
+    <p class="text-muted small mb-0">
+      更新日 <%= receipt_detail.updated_at.to_fs(:short) %>
+    </p>
+  </div>
+</div>

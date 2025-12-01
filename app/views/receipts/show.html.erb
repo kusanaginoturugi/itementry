@@ -1,0 +1,42 @@
+<% content_for :title, @receipt.name.presence || "レシート" %>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h1 class="h4 mb-1"><%= @receipt.name.presence || "レシート" %></h1>
+    <div class="text-muted">ID: <%= @receipt.id %></div>
+  </div>
+  <div class="btn-group">
+    <%= link_to "一覧へ戻る", receipts_path, class: "btn btn-outline-secondary" %>
+    <%= link_to "編集", edit_receipt_path(@receipt), class: "btn btn-primary" %>
+    <%= button_to "削除", @receipt, method: :delete, form: { data: { turbo_confirm: "このレシートを削除しますか？" } }, class: "btn btn-danger" %>
+  </div>
+</div>
+
+<%= render @receipt %>
+
+<div class="card shadow-sm mt-3">
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0 align-middle">
+      <thead class="table-light">
+        <tr>
+          <th scope="col">商品ID</th>
+          <th scope="col">商品名</th>
+          <th scope="col" class="text-end">個数</th>
+          <th scope="col" class="text-end">単価</th>
+          <th scope="col" class="text-end">小計</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @receipt.receipt_details.each do |detail| %>
+          <tr>
+            <td><%= detail.item_id %></td>
+            <td><%= detail.item_name %></td>
+            <td class="text-end"><%= detail.count %></td>
+            <td class="text-end"><%= number_with_delimiter(detail.value) %></td>
+            <td class="text-end"><%= number_with_delimiter(detail.sum_value) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

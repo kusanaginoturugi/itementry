@@ -1,0 +1,36 @@
+<div class="card shadow-sm mb-2" data-receipt-form-target="detail">
+  <div class="card-body">
+    <div class="row gy-2 align-items-end">
+      <div class="col-md-2">
+        <%= f.label :item_code, "商品コード", class: "form-label" %>
+        <%= text_field_tag :item_code_display, f.object.item_code.presence || f.object.item&.item_code, class: "form-control", required: true, name: "", data: { receipt_form_target: "itemCodeField", action: "change->receipt-form#loadItemName input->receipt-form#recalculate" } %>
+        <%= f.hidden_field :item_code, data: { receipt_form_target: "itemCodeHidden" } %>
+        <%= f.hidden_field :item_id, data: { receipt_form_target: "itemIdField" } %>
+      </div>
+      <div class="col-md-3">
+        <%= f.label :item_name, "商品名", class: "form-label" %>
+        <p class="form-control-plaintext mb-0" data-receipt-form-target="itemName">-</p>
+        <%= f.hidden_field :item_name, data: { receipt_form_target: "itemNameField" } %>
+      </div>
+      <div class="col-md-2">
+        <%= f.label :count, "個数", class: "form-label" %>
+        <%= f.number_field :count, class: "form-control", min: 0, step: 1, required: true, data: { action: "input->receipt-form#recalculate" } %>
+      </div>
+      <div class="col-md-2">
+        <%= f.label :value, "単価", class: "form-label" %>
+        <p class="form-control-plaintext mb-0" data-receipt-form-target="valueDisplay">0</p>
+        <%= f.hidden_field :value, data: { receipt_form_target: "valueField" } %>
+      </div>
+      <div class="col-md-2">
+        <%= f.label :sum_value, "小計", class: "form-label" %>
+        <p class="form-control-plaintext mb-0" data-receipt-form-target="sumDisplay">0</p>
+        <%= f.hidden_field :sum_value, data: { receipt_form_target: "sumField" } %>
+      </div>
+      <div class="col-md-1 d-flex gap-1 justify-content-end">
+        <%= link_to "追加", "#", class: "btn btn-outline-primary btn-sm", data: { action: "receipt-form#addDetail" } %>
+        <%= link_to "削除", "#", class: "btn btn-outline-danger btn-sm", data: { action: "receipt-form#removeDetail" } %>
+      </div>
+    </div>
+    <%= f.hidden_field :_destroy, value: "0", data: { receipt_form_target: "destroyField" } %>
+  </div>
+</div>

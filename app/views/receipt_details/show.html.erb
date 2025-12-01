@@ -1,0 +1,15 @@
+<% content_for :title, "レシート明細" %>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h1 class="h4 mb-1">レシート明細</h1>
+    <div class="text-muted">ID: <%= @receipt_detail.id %></div>
+  </div>
+  <div class="btn-group">
+    <%= link_to "一覧へ戻る", receipt_details_path, class: "btn btn-outline-secondary" %>
+    <%= link_to "編集", edit_receipt_detail_path(@receipt_detail), class: "btn btn-primary" %>
+    <%= button_to "削除", @receipt_detail, method: :delete, form: { data: { turbo_confirm: "この明細を削除しますか？" } }, class: "btn btn-danger" %>
+  </div>
+</div>
+
+<%= render @receipt_detail %>

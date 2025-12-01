@@ -1,4 +1,11 @@
 Rails.application.routes.draw do
+  resources :receipt_details
+  resources :receipts
+  resources :items do
+    collection do
+      get :lookup
+    end
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

@@ -1,0 +1,11 @@
+<% content_for :title, "レシート明細編集" %>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h4 mb-0">レシート明細編集</h1>
+  <div class="btn-group">
+    <%= link_to "詳細", @receipt_detail, class: "btn btn-outline-secondary" %>
+    <%= link_to "一覧へ戻る", receipt_details_path, class: "btn btn-outline-secondary" %>
+  </div>
+</div>
+
+<%= render "form", receipt_detail: @receipt_detail %>

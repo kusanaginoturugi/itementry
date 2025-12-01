@@ -1,0 +1,11 @@
+<% content_for :title, "商品編集" %>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h4 mb-0">商品編集</h1>
+  <div class="btn-group">
+    <%= link_to "詳細", @item, class: "btn btn-outline-secondary" %>
+    <%= link_to "一覧へ戻る", items_path, class: "btn btn-outline-secondary" %>
+  </div>
+</div>
+
+<%= render "form", item: @item %>

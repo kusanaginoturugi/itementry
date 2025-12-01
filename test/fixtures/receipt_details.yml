@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  item: two
+  receipt: one
+  item_code: "0002"
+  item_name: MyText
+  count: 1
+  value: 1
+  sum_value: 1
+
+two:
+  item: two
+  receipt: two
+  item_code: "0002"
+  item_name: MyText
+  count: 1
+  value: 1
+  sum_value: 1
