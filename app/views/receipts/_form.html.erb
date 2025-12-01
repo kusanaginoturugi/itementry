@@ -57,8 +57,21 @@
         <div class="card-body">
           <div class="row g-2">
             <% @items.each do |item| %>
-              <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="border rounded p-2 h-100">
+              <% tone = case item.item_code.to_s[0]&.upcase
+                when '0' then 'rgba(248,249,250,0.9)'
+                when '1' then 'rgba(240,245,255,0.9)'
+                when '2' then 'rgba(240,255,245,0.9)'
+                when '3' then 'rgba(255,245,240,0.9)'
+                when '4' then 'rgba(245,240,255,0.9)'
+                when '5' then 'rgba(255,250,240,0.9)'
+                when '6' then 'rgba(240,248,255,0.9)'
+                when '7' then 'rgba(245,255,250,0.9)'
+                when '8' then 'rgba(250,255,240,0.9)'
+                when '9' then 'rgba(252,248,255,0.9)'
+                else 'rgba(248,249,250,0.9)'
+              end %>
+              <div class="col-lg-2 col-md-3 col-sm-4">
+                <div class="border rounded p-2 h-100" style="background-color: <%= tone %>;">
                   <div class="text-monospace fw-bold mb-1"><%= item.item_code %></div>
                   <div class="small text-truncate"><%= item.name %></div>
                 </div>
