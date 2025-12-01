@@ -19,11 +19,25 @@
         </thead>
         <tbody>
           <% @items.each do |item| %>
+            <% tone = case item.item_code.to_s[0]&.upcase
+              when '0' then '#f8fafc'   # light gray-blue
+              when '1' then '#eef2ff'   # pastel indigo
+              when '2' then '#ecfdf3'   # pastel green
+              when '3' then '#fff1f2'   # pastel rose
+              when '4' then '#f3e8ff'   # pastel purple
+              when '5' then '#fff7ed'   # pastel orange
+              when '6' then '#e0f2fe'   # pastel sky
+              when '7' then '#e7fff4'   # pastel mint
+              when '8' then '#fefce8'   # pastel sand
+              when '9' then '#f5f3ff'   # pastel lavender
+              else '#f8fafc'
+            end %>
+            <% cell_style = "background-color: #{tone} !important;" %>
             <tr>
-              <td class="fw-semibold"><%= item.item_code %></td>
-              <td class="fw-semibold"><%= item.name %></td>
-              <td class="text-end"><%= number_with_delimiter(item.value) %></td>
-              <td class="text-end">
+              <td class="fw-semibold" style="<%= cell_style %>"><%= item.item_code %></td>
+              <td class="fw-semibold" style="<%= cell_style %>"><%= item.name %></td>
+              <td class="text-end" style="<%= cell_style %>"><%= number_with_delimiter(item.value) %></td>
+              <td class="text-end" style="<%= cell_style %>">
                 <div class="d-inline-flex gap-1 flex-nowrap">
                   <%= link_to "詳細", item, class: "btn btn-outline-secondary btn-sm" %>
                   <%= link_to "編集", edit_item_path(item), class: "btn btn-outline-primary btn-sm" %>
