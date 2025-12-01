@@ -14,7 +14,7 @@
             <th scope="col">レシート名</th>
             <th scope="col" class="text-end">点数合計</th>
             <th scope="col" class="text-end">金額合計</th>
-            <th scope="col" class="text-end">操作</th>
+            <th scope="col" class="text-end text-nowrap">操作</th>
           </tr>
         </thead>
         <tbody>
@@ -24,9 +24,11 @@
               <td class="text-end"><%= receipt.total_count %></td>
               <td class="text-end"><%= number_with_delimiter(receipt.total_value) %></td>
               <td class="text-end">
-                <%= link_to "詳細", receipt, class: "btn btn-outline-secondary btn-sm me-1" %>
-                <%= link_to "編集", edit_receipt_path(receipt), class: "btn btn-outline-primary btn-sm me-1" %>
-                <%= button_to "削除", receipt, method: :delete, form: { data: { turbo_confirm: "このレシートを削除しますか？" } }, class: "btn btn-outline-danger btn-sm" %>
+                <div class="d-inline-flex gap-1 flex-nowrap">
+                  <%= link_to "詳細", receipt, class: "btn btn-outline-secondary btn-sm" %>
+                  <%= link_to "編集", edit_receipt_path(receipt), class: "btn btn-outline-primary btn-sm" %>
+                  <%= button_to "削除", receipt, method: :delete, form: { data: { turbo_confirm: "このレシートを削除しますか？" }, class: "d-inline" }, class: "btn btn-outline-danger btn-sm" %>
+                </div>
               </td>
             </tr>
           <% end %>

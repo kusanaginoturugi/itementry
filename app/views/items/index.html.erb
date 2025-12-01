@@ -14,7 +14,7 @@
             <th scope="col">商品コード</th>
             <th scope="col">Name</th>
             <th scope="col" class="text-end">値段</th>
-            <th scope="col" class="text-end">操作</th>
+            <th scope="col" class="text-end text-nowrap">操作</th>
           </tr>
         </thead>
         <tbody>
@@ -24,9 +24,11 @@
               <td class="fw-semibold"><%= item.name %></td>
               <td class="text-end"><%= number_with_delimiter(item.value) %></td>
               <td class="text-end">
-                <%= link_to "詳細", item, class: "btn btn-outline-secondary btn-sm me-1" %>
-                <%= link_to "編集", edit_item_path(item), class: "btn btn-outline-primary btn-sm me-1" %>
-                <%= button_to "削除", item, method: :delete, form: { data: { turbo_confirm: "#{item.name}を削除しますか？" } }, class: "btn btn-outline-danger btn-sm" %>
+                <div class="d-inline-flex gap-1 flex-nowrap">
+                  <%= link_to "詳細", item, class: "btn btn-outline-secondary btn-sm" %>
+                  <%= link_to "編集", edit_item_path(item), class: "btn btn-outline-primary btn-sm" %>
+                  <%= button_to "削除", item, method: :delete, form: { data: { turbo_confirm: "#{item.name}を削除しますか？" }, class: "d-inline" }, class: "btn btn-outline-danger btn-sm" %>
+                </div>
               </td>
             </tr>
           <% end %>
