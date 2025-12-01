@@ -10,6 +10,17 @@ class ReceiptDetailsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "should get summary" do
+    get summary_receipt_details_url
+    assert_response :success
+  end
+
+  test "should get summary csv" do
+    get summary_receipt_details_url(format: :csv)
+    assert_response :success
+    assert_equal "text/csv", response.media_type
+  end
+
   test "should get new" do
     get new_receipt_detail_url
     assert_response :success

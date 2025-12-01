@@ -6,6 +6,20 @@ class ReceiptDetailsController < ApplicationController
     @receipt_details = ReceiptDetail.all
   end
 
+  def summary
+    @summaries = ReceiptDetail
+      .select("item_id, item_code, item_name, SUM(count) AS total_count, SUM(sum_value) AS total_value")
+      .group(:item_id, :item_code, :item_name)
+      .order(:item_code)
+
+    respond_to do |format|
+      format.html
+      format.csv do
+        send_data build_csv(@summaries), filename: "receipt_details_summary-#{Time.zone.now.strftime('%Y%m%d%H%M%S')}.csv"
+      end
+    end
+  end
+
   # GET /receipt_details/1 or /receipt_details/1.json
   def show
   end
@@ -66,5 +80,18 @@ class ReceiptDetailsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def receipt_detail_params
       params.expect(receipt_detail: [ :receipt_id, :item_id, :item_code, :item_name, :count, :value, :sum_value ])
+    end
+
+    def build_csv(rows)
+      header = %w[item_code item_name total_count total_value]
+      body = rows.map do |row|
+        [
+          row.item_code,
+          row.item_name,
+          row.total_count,
+          row.total_value
+        ].map { |val| %("#{val.to_s.gsub('"', '""')}") }.join(",")
+      end
+      ([header.join(",")] + body).join("\n") + "\n"
     end
 end

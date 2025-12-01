@@ -48,5 +48,25 @@
       <%= form.submit "保存する", class: "btn btn-primary" %>
       <%= link_to "戻る", receipt.persisted? ? receipt : receipts_path, class: "btn btn-outline-secondary" %>
     </div>
+
+    <% if @items.present? %>
+      <div class="card mt-3">
+        <div class="card-header py-2">
+          <span class="fw-semibold">商品コード一覧</span>
+        </div>
+        <div class="card-body">
+          <div class="row g-2">
+            <% @items.each do |item| %>
+              <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="border rounded p-2 h-100">
+                  <div class="text-monospace fw-bold mb-1"><%= item.item_code %></div>
+                  <div class="small text-truncate"><%= item.name %></div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
   </div>
 <% end %>

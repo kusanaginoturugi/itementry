@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
-  resources :receipt_details
+  resources :receipt_details do
+    collection do
+      get :summary
+    end
+  end
   resources :receipts
   resources :items do
     collection do

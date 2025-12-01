@@ -1,5 +1,6 @@
 class ReceiptsController < ApplicationController
   before_action :set_receipt, only: %i[ show edit update destroy ]
+  before_action :set_items, only: %i[ new edit create update ]
 
   # GET /receipts or /receipts.json
   def index
@@ -63,6 +64,10 @@ class ReceiptsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_receipt
       @receipt = Receipt.find(params.expect(:id))
+    end
+
+    def set_items
+      @items = Item.order(:item_code)
     end
 
     # Only allow a list of trusted parameters through.

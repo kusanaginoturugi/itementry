@@ -1,0 +1,34 @@
+<% content_for :title, "レシート明細集計" %>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h4 mb-0">レシート明細集計</h1>
+  <div class="btn-group">
+    <%= link_to "CSV出力", summary_receipt_details_path(format: :csv), class: "btn btn-outline-primary btn-sm" %>
+    <%= link_to "明細一覧へ", receipt_details_path, class: "btn btn-outline-secondary btn-sm" %>
+  </div>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0 align-middle">
+      <thead class="table-light">
+        <tr>
+          <th scope="col">商品コード</th>
+          <th scope="col">商品名</th>
+          <th scope="col" class="text-end">合計個数</th>
+          <th scope="col" class="text-end">合計金額</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @summaries.each do |row| %>
+          <tr>
+            <td class="text-monospace"><%= row.item_code %></td>
+            <td><%= row.item_name %></td>
+            <td class="text-end"><%= row.total_count %></td>
+            <td class="text-end"><%= number_with_delimiter(row.total_value) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
