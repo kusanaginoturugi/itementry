@@ -18,6 +18,12 @@
           <th scope="col" class="text-end">合計個数</th>
           <th scope="col" class="text-end">合計金額</th>
         </tr>
+        <tr class="table-secondary">
+          <th>合計</th>
+          <th></th>
+          <th class="text-end"><%= @summaries.sum(&:total_count) %></th>
+          <th class="text-end"><%= number_with_delimiter(@summaries.sum(&:total_value)) %></th>
+        </tr>
       </thead>
       <tbody>
         <% @summaries.each do |row| %>
