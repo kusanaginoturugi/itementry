@@ -5,6 +5,7 @@ class ReceiptsController < ApplicationController
   # GET /receipts or /receipts.json
   def index
     @receipts = Receipt.all
+    @totals = @receipts.group(:id).pluck(Arel.sql("SUM(total_count)"), Arel.sql("SUM(total_value)")).transpose.map { |v| v.compact.sum }
   end
 
   # GET /receipts/1 or /receipts/1.json
@@ -28,7 +29,7 @@ class ReceiptsController < ApplicationController
 
     respond_to do |format|
       if @receipt.save
-        format.html { redirect_to @receipt, notice: "レシートを登録しました。" }
+        format.html { redirect_to new_receipt_path, notice: "レシートを登録しました。続けて入力できます。" }
         format.json { render :show, status: :created, location: @receipt }
       else
         format.html { render :new, status: :unprocessable_entity }

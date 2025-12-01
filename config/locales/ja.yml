@@ -7,7 +7,7 @@ ja:
     attributes:
       item:
         name: 商品名
-        value: 値段
+        value: 価格
       receipt:
         name: レシート名
         total_count: 点数合計
@@ -21,5 +21,5 @@ ja:
         sum_value: 小計
   helpers:
     submit:
-      create: "%{model}を作成"
-      update: "%{model}を更新"
+      create: "%{model} を作成"
+      update: "%{model} を更新"

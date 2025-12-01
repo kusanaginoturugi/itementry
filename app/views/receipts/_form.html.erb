@@ -29,7 +29,7 @@
 
     <div class="d-flex justify-content-between align-items-center mb-2">
       <h2 class="h5 mb-0">レシート明細</h2>
-      <%= link_to "明細を追加", "#", class: "btn btn-outline-primary btn-sm", data: { action: "receipt-form#addDetail" } %>
+      <%= link_to "明細を追加", "#", class: "btn btn-outline-primary btn-sm", data: { action: "click->receipt-form#addDetail keydown.enter->receipt-form#addDetail" } %>
     </div>
 
     <div data-receipt-form-target="details">
@@ -58,17 +58,17 @@
           <div class="row g-2">
             <% @items.each do |item| %>
               <% tone = case item.item_code.to_s[0]&.upcase
-                when '0' then 'rgba(248,249,250,0.9)'
-                when '1' then 'rgba(240,245,255,0.9)'
-                when '2' then 'rgba(240,255,245,0.9)'
-                when '3' then 'rgba(255,245,240,0.9)'
-                when '4' then 'rgba(245,240,255,0.9)'
-                when '5' then 'rgba(255,250,240,0.9)'
-                when '6' then 'rgba(240,248,255,0.9)'
-                when '7' then 'rgba(245,255,250,0.9)'
-                when '8' then 'rgba(250,255,240,0.9)'
-                when '9' then 'rgba(252,248,255,0.9)'
-                else 'rgba(248,249,250,0.9)'
+                when '0' then '#f8fafc'   # light gray-blue
+                when '1' then '#eef2ff'   # pastel indigo
+                when '2' then '#ecfdf3'   # pastel green
+                when '3' then '#fff1f2'   # pastel rose
+                when '4' then '#f3e8ff'   # pastel purple
+                when '5' then '#fff7ed'   # pastel orange
+                when '6' then '#e0f2fe'   # pastel sky
+                when '7' then '#e7fff4'   # pastel mint
+                when '8' then '#fefce8'   # pastel sand
+                when '9' then '#f5f3ff'   # pastel lavender
+                else '#f8fafc'
               end %>
               <div class="col-lg-2 col-md-3 col-sm-4">
                 <div class="border rounded p-2 h-100" style="background-color: <%= tone %>;">

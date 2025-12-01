@@ -31,7 +31,7 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     end
 
     receipt = Receipt.last
-    assert_redirected_to receipt_url(receipt)
+    assert_redirected_to new_receipt_url
     assert_equal 2, receipt.receipt_details.count
     assert_equal 3, receipt.total_count
     assert_equal 400, receipt.total_value

@@ -27,7 +27,7 @@
         <%= f.hidden_field :sum_value, data: { receipt_form_target: "sumField" } %>
       </div>
       <div class="col-md-1 d-flex gap-1 justify-content-end">
-        <%= link_to "追加", "#", class: "btn btn-outline-primary btn-sm", data: { action: "receipt-form#addDetail" } %>
+        <%= link_to "追加", "#", class: "btn btn-outline-primary btn-sm", data: { action: "click->receipt-form#addDetail keydown.enter->receipt-form#addDetail" } %>
         <%= link_to "削除", "#", class: "btn btn-outline-danger btn-sm", data: { action: "receipt-form#removeDetail" } %>
       </div>
     </div>
