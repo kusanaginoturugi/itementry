@@ -20,6 +20,7 @@ export default class extends Controller {
 
   connect() {
     this.recalculate()
+    this.focusFirstCodeField()
   }
 
   addDetail(event) {
@@ -32,10 +33,10 @@ export default class extends Controller {
     })
     this.detailsTarget.appendChild(content)
 
-    // focus the new item's code field
-    const newDetail = this.detailsTarget.querySelector(`[name*="receipt_details_attributes[${newId}]"]`)?.closest("[data-receipt-form-target='detail']")
-    const codeField = newDetail?.querySelector("[data-receipt-form-target='itemCodeField']")
-    if (codeField) codeField.focus()
+    // focus the newly added item's code field
+    const codeFields = this.detailsTarget.querySelectorAll("[data-receipt-form-target='itemCodeField']")
+    const newCodeField = codeFields[codeFields.length - 1]
+    if (newCodeField) newCodeField.focus()
 
     this.recalculate()
   }
@@ -125,5 +126,10 @@ export default class extends Controller {
     }
 
     this.recalculate()
+  }
+
+  focusFirstCodeField() {
+    const codeField = this.detailsTarget.querySelector("[data-receipt-form-target='itemCodeField']")
+    if (codeField) codeField.focus()
   }
 }
