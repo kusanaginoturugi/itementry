@@ -2,13 +2,18 @@ class ReceiptsController < ApplicationController
   before_action :set_receipt, only: %i[ show edit update destroy ]
   before_action :set_items, only: %i[ new edit create update ]
   before_action :set_books, only: %i[ index new edit create update ]
+  helper_method :sort_column, :sort_direction, :toggle_direction_for
 
   # GET /receipts or /receipts.json
   def index
-    scoped = Receipt.includes(:receipt_details)
+    scoped = Receipt
+      .includes(:receipt_details)
+      .left_joins(:receipt_details)
+      .group("receipts.id")
     scoped = scoped.where(book_id: params[:book_id]) if params[:book_id].present?
-    @receipts = scoped
+    @receipts = scoped.order(order_clause)
     @item_kinds_by_receipt = ReceiptDetail.where(receipt_id: @receipts).group(:receipt_id).distinct.count(:item_code)
+    @item_kinds_by_receipt.default = 0
     @item_kinds_total = @item_kinds_by_receipt.values.sum
   end
 
@@ -89,5 +94,29 @@ class ReceiptsController < ApplicationController
           id item_id item_code item_name count value sum_value _destroy
         ]
       )
+    end
+
+    def sort_column
+      %w[name item_kinds total_value].include?(params[:sort]) ? params[:sort] : 'name'
+    end
+
+    def sort_direction
+      %w[asc desc].include?(params[:direction]) ? params[:direction] : 'asc'
+    end
+
+    def toggle_direction_for(column)
+      return 'asc' unless sort_column == column
+      sort_direction == 'asc' ? 'desc' : 'asc'
+    end
+
+    def order_clause
+      case sort_column
+      when 'item_kinds'
+        Arel.sql("COUNT(DISTINCT receipt_details.item_code) #{sort_direction}")
+      when 'total_value'
+        { total_value: sort_direction }
+      else
+        { name: sort_direction }
+      end
     end
 end

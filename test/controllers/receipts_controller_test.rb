@@ -31,6 +31,41 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "2", total_kinds
   end
 
+  test "index can sort by item kinds descending" do
+    ReceiptDetail.delete_all
+    Receipt.delete_all
+
+    r1 = Receipt.create!(name: "1")
+    r1.receipt_details.create!(item: items(:one), item_code: "001", item_name: "A", count: 1, value: 100, sum_value: 100)
+    r1.receipt_details.create!(item: items(:two), item_code: "002", item_name: "B", count: 1, value: 100, sum_value: 100)
+
+    r2 = Receipt.create!(name: "2")
+    r2.receipt_details.create!(item: items(:one), item_code: "001", item_name: "A", count: 1, value: 100, sum_value: 100)
+
+    get receipts_url(sort: "item_kinds", direction: "desc")
+    assert_response :success
+
+    names = css_select("table tbody tr td:first-child").map { |td| td.text.strip }
+    assert_equal ["1", "2"], names
+  end
+
+  test "index can sort by total value ascending" do
+    ReceiptDetail.delete_all
+    Receipt.delete_all
+
+    r1 = Receipt.create!(name: "1")
+    r1.receipt_details.create!(item: items(:one), item_code: "001", item_name: "A", count: 1, value: 100, sum_value: 100)
+
+    r2 = Receipt.create!(name: "2")
+    r2.receipt_details.create!(item: items(:one), item_code: "001", item_name: "A", count: 1, value: 300, sum_value: 300)
+
+    get receipts_url(sort: "total_value", direction: "asc")
+    assert_response :success
+
+    names = css_select("table tbody tr td:first-child").map { |td| td.text.strip }
+    assert_equal ["1", "2"], names
+  end
+
   test "should get new" do
     get new_receipt_url
     assert_response :success
