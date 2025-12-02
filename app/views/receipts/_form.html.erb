@@ -15,7 +15,7 @@
     <div class="row gy-3 align-items-end">
       <div class="col-md-6">
         <%= form.label :name, "レシート名", class: "form-label" %>
-        <%= form.text_field :name, class: "form-control" %>
+        <%= form.number_field :name, class: "form-control", min: 0, step: 1, required: true, inputmode: "numeric", pattern: "\\d*" %>
       </div>
       <div class="col-md-3">
         <label class="form-label text-muted">点数合計</label>

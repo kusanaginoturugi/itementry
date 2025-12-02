@@ -14,7 +14,7 @@ class ReceiptsController < ApplicationController
 
   # GET /receipts/new
   def new
-    @receipt = Receipt.new
+    @receipt = Receipt.new(name: Receipt.next_name)
     @receipt.receipt_details.build
   end
 

@@ -15,6 +15,17 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "new prepopulates next numeric name" do
+    ReceiptDetail.delete_all
+    Receipt.delete_all
+    Receipt.create!(name: "10")
+
+    get new_receipt_url
+    assert_response :success
+    name_value = css_select("input[name='receipt[name]']").first[:value]
+    assert_equal "11", name_value
+  end
+
   test "new displays item codes ordered by item_code" do
     ReceiptDetail.delete_all
     Receipt.delete_all
@@ -34,7 +45,7 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
       assert_difference("ReceiptDetail.count", 2) do
       post receipts_url, params: {
         receipt: {
-          name: "レシートA",
+          name: "10",
           receipt_details_attributes: [
             { item_id: items(:one).id, item_code: items(:one).item_code, item_name: "商品A", count: 2, value: 100 },
             { item_id: items(:two).id, item_code: items(:two).item_code, item_name: "商品B", count: 1, value: 200 }
@@ -51,6 +62,21 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 400, receipt.total_value
   end
 
+  test "rejects non numeric receipt name" do
+    assert_no_difference("Receipt.count") do
+      post receipts_url, params: {
+        receipt: {
+          name: "abc",
+          receipt_details_attributes: [
+            { item_id: items(:one).id, item_code: items(:one).item_code, item_name: "商品A", count: 1, value: 100 }
+          ]
+        }
+      }
+    end
+
+    assert_response :unprocessable_entity
+  end
+
   test "should show receipt" do
     get receipt_url(@receipt)
     assert_response :success
@@ -64,7 +90,7 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
   test "should update receipt" do
     patch receipt_url(@receipt), params: {
       receipt: {
-        name: "更新後レシート",
+        name: "999",
         receipt_details_attributes: [
           { id: @receipt.receipt_details.first.id, item_id: items(:one).id, item_code: items(:one).item_code, item_name: "商品A", count: 3, value: 100 }
         ]
