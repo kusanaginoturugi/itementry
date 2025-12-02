@@ -1,24 +1,32 @@
-# README
+# 道具販売登録アプリ
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+レシート（販売履歴）を登録・集計する Rails 8 アプリです。商品コードベースで明細を入力し、帳票（book）でレシートを紐付けます。
 
-Things you may want to cover:
+## セットアップ
 
-* Ruby version
+```bash
+bin/setup        # 依存インストール・DB準備
+bin/rails db:prepare
+```
 
-* System dependencies
+開発サーバー:
 
-* Configuration
+```bash
+bin/dev          # Rails サーバー起動
+```
 
-* Database creation
+## 主な機能
 
-* Database initialization
+- **帳票 (books)**: 一覧・登録・編集・削除。使用中フラグ `is_use` を切り替える「選択」ボタン付き。使用中の帳票がレシート登録画面でデフォルト選択される。既定の「未分類」(id=1)が常に存在。
+- **商品 (items)**: 商品コード・名前・価格・可変価格フラグ `is_variable_value` を管理。商品一覧はコード順でソート可能。可変価格の商品だけ単価を明細で編集可。
+- **レシート (receipts)**: レシート名は数値のみ、自動採番。使用中帳票に紐づけて登録。明細は商品コードで検索し商品名/単価を自動セット。商品コード重複は許可しない。商品コード空または個数0の明細は無視。点数合計・商品種類数・金額合計をリアルタイム表示。
+- **レシート明細 (receipt_details)**: 数量・単価・小計を管理。固定価格の商品はマスター単価を強制。
+- **CSVインポート**: `lib/tasks/items_import.rake` の Rake タスクで `db/items3.csv` をインポートし商品を置き換え。
 
-* How to run the test suite
+## テスト
 
-* Services (job queues, cache servers, search engines, etc.)
+```bash
+bin/rails test
+```
 
-* Deployment instructions
-
-* ...
+コントローラ・モデルのテストが用意されています。`bin/ci` で一括チェックも可能です。
