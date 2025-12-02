@@ -24,7 +24,7 @@
 
     <div class="mb-3">
       <%= form.label :item_type, "商品種類", class: "form-label" %>
-      <%= form.number_field :item_type, class: "form-control", min: 0, step: 1, required: true %>
+      <%= form.select :item_type, options_for_select(item_type_options, form.object.item_type), {}, class: "form-select" %>
     </div>
 
     <div class="mb-3">

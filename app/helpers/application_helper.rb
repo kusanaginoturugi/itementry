@@ -1,4 +1,20 @@
 module ApplicationHelper
+  ITEM_TYPE_LABELS = {
+    1 => "護摩センター",
+    2 => "祈願会等",
+    3 => "観音堂",
+    4 => "加賀御神水",
+    5 => "太明星"
+  }.freeze
+
+  def item_type_options
+    ITEM_TYPE_LABELS.map { |value, label| [label, value] }
+  end
+
+  def item_type_label(value)
+    ITEM_TYPE_LABELS[value.to_i] || value
+  end
+
   def item_code_tone(code)
     first = code.to_s[0]&.upcase
     case first
