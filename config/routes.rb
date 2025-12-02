@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  root "receipts#index"
+
   resources :receipt_details do
     collection do
       get :summary
