@@ -4,8 +4,9 @@ class ReceiptsController < ApplicationController
 
   # GET /receipts or /receipts.json
   def index
-    @receipts = Receipt.all
-    @totals = @receipts.group(:id).pluck(Arel.sql("SUM(total_count)"), Arel.sql("SUM(total_value)")).transpose.map { |v| v.compact.sum }
+    @receipts = Receipt.includes(:receipt_details)
+    @item_kinds_by_receipt = ReceiptDetail.where(receipt_id: @receipts).group(:receipt_id).distinct.count(:item_code)
+    @item_kinds_total = @item_kinds_by_receipt.values.sum
   end
 
   # GET /receipts/1 or /receipts/1.json

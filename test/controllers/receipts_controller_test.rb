@@ -10,6 +10,27 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "index shows product kind counts instead of total count" do
+    ReceiptDetail.delete_all
+    Receipt.delete_all
+
+    receipt = Receipt.create!(name: "50")
+    receipt.receipt_details.create!(
+      item: items(:one), item_code: items(:one).item_code, item_name: "商品A", count: 1, value: 100, sum_value: 100
+    )
+    receipt.receipt_details.create!(
+      item: items(:two), item_code: items(:two).item_code, item_name: "商品B", count: 3, value: 200, sum_value: 600
+    )
+
+    get receipts_url
+    assert_response :success
+
+    kind_counts = css_select("tbody tr td:nth-child(2)").map { |td| td.text.strip.to_i }
+    assert_equal [2], kind_counts
+    total_kinds = css_select("thead tr.table-secondary th:nth-child(2)").first.text.strip
+    assert_equal "2", total_kinds
+  end
+
   test "should get new" do
     get new_receipt_url
     assert_response :success
