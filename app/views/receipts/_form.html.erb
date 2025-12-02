@@ -67,7 +67,7 @@
                 <div class="border rounded p-2 h-100" style="background-color: <%= item_code_tone(item.item_code) %>;">
                   <div class="d-flex justify-content-between align-items-start mb-1">
                     <div class="text-monospace fw-bold"><%= item.item_code %></div>
-                    <div class="small text-muted ms-2"><%= number_with_delimiter(item.value) %></div>
+                    <div class="text-muted ms-2"><%= number_with_delimiter(item.value) %> 円</div>
                   </div>
                   <div class="small fw-semibold text-truncate"><%= item.name %></div>
                 </div>
