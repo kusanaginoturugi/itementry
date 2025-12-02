@@ -28,7 +28,7 @@ ja:
         refund: 還付金
         sum_value: 小計
         sum_refund: 還付金合計
-	sum_payment: 支払合計
+        sum_payment: 支払合計
   helpers:
     submit:
       create: "%{model} を作成"

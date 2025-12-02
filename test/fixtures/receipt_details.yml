@@ -7,7 +7,11 @@ one:
   item_name: "商品B"
   count: 1
   value: 200
+  refund: 0
+  sum_refund: 0
+  sum_payment: 200
   sum_value: 200
+  item_type: 1
 
 two:
   item: two
@@ -16,4 +20,8 @@ two:
   item_name: "商品B"
   count: 1
   value: 200
+  refund: 0
+  sum_refund: 0
+  sum_payment: 200
   sum_value: 200
+  item_type: 1

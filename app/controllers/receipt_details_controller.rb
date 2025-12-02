@@ -88,7 +88,7 @@ class ReceiptDetailsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def receipt_detail_params
-      params.expect(receipt_detail: [ :receipt_id, :item_id, :item_code, :item_name, :count, :value, :sum_value ])
+      params.expect(receipt_detail: [ :receipt_id, :item_id, :item_code, :item_name, :item_type, :count, :value, :refund, :sum_value, :sum_refund, :sum_payment ])
     end
 
     def build_csv(rows)
