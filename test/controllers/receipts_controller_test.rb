@@ -15,6 +15,20 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "new displays item codes ordered by item_code" do
+    ReceiptDetail.delete_all
+    Receipt.delete_all
+    Item.delete_all
+    Item.create!(item_code: "300", name: "三番目の商品", value: 300)
+    Item.create!(item_code: "010", name: "一番目の商品", value: 100)
+    Item.create!(item_code: "200", name: "二番目の商品", value: 200)
+
+    get new_receipt_url
+    assert_response :success
+    item_codes = css_select(".card.mt-3 .text-monospace.fw-bold").map { |node| node.text.strip }
+    assert_equal %w[010 200 300], item_codes
+  end
+
   test "should create receipt" do
     assert_difference("Receipt.count", 1) do
       assert_difference("ReceiptDetail.count", 2) do

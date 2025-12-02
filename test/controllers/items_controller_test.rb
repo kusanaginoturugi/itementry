@@ -11,6 +11,19 @@ class ItemsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "index lists items ordered by item_code" do
+    ReceiptDetail.delete_all
+    Item.delete_all
+    Item.create!(item_code: "200", name: "三番目の商品", value: 300)
+    Item.create!(item_code: "050", name: "一番目の商品", value: 200)
+    Item.create!(item_code: "100", name: "二番目の商品", value: 250)
+
+    get items_url
+    assert_response :success
+    item_codes = css_select("table tbody tr td:first-child").map { |td| td.text.strip }
+    assert_equal %w[050 100 200], item_codes
+  end
+
   test "should get new" do
     get new_item_url
     assert_response :success
