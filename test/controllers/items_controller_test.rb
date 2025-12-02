@@ -24,6 +24,19 @@ class ItemsControllerTest < ActionDispatch::IntegrationTest
     assert_equal %w[050 100 200], item_codes
   end
 
+  test "index can sort by name descending" do
+    ReceiptDetail.delete_all
+    Item.delete_all
+    Item.create!(item_code: "200", name: "あああ", value: 300)
+    Item.create!(item_code: "050", name: "ううう", value: 200)
+    Item.create!(item_code: "100", name: "えええ", value: 250)
+
+    get items_url(sort: "name", direction: "desc")
+    assert_response :success
+    names = css_select("table tbody tr td:nth-child(2)").map { |td| td.text.strip }
+    assert_equal %w[えええ ううう あああ], names
+  end
+
   test "should get new" do
     get new_item_url
     assert_response :success

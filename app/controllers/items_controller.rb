@@ -1,9 +1,10 @@
 class ItemsController < ApplicationController
   before_action :set_item, only: %i[ show edit update destroy ]
+  helper_method :current_sort_column, :current_sort_direction, :toggle_direction_for
 
   # GET /items or /items.json
   def index
-    @items = Item.order(:item_code)
+    @items = Item.order(order_clause)
   end
 
   # GET /items/1 or /items/1.json
@@ -75,5 +76,23 @@ class ItemsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def item_params
       params.expect(item: [ :name, :value, :item_code ])
+    end
+
+    def order_clause
+      direction = current_sort_direction == 'desc' ? :desc : :asc
+      Item.arel_table[current_sort_column].send(direction)
+    end
+
+    def current_sort_column
+      %w[item_code name value].include?(params[:sort]) ? params[:sort] : 'item_code'
+    end
+
+    def current_sort_direction
+      %w[asc desc].include?(params[:direction]) ? params[:direction] : 'asc'
+    end
+
+    def toggle_direction_for(column)
+      return 'asc' unless column == current_sort_column
+      current_sort_direction == 'asc' ? 'desc' : 'asc'
     end
 end
