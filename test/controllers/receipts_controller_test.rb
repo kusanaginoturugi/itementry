@@ -205,6 +205,8 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
   test "should show receipt" do
     get receipt_url(@receipt)
     assert_response :success
+    assert_includes response.body, "商品種類数"
+    refute_includes response.body, "点数合計"
   end
 
   test "should get edit" do
