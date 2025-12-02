@@ -1,12 +1,17 @@
-<div id="<%= dom_id book %>">
-  <div>
-    <strong>Title:</strong>
-    <%= book.title %>
-  </div>
+<div id="<%= dom_id book %>" class="card shadow-sm">
+  <div class="card-body">
+    <p class="text-muted mb-1">台帳名</p>
+    <h2 class="h5 mb-3"><%= book.title.presence || "名称未設定" %></h2>
 
-  <div>
-    <strong>Is hidden:</strong>
-    <%= book.is_hidden %>
-  </div>
+    <p class="text-muted mb-1">表示状態</p>
+    <% if book.is_hidden? %>
+      <span class="badge bg-secondary">非表示</span>
+    <% else %>
+      <span class="badge bg-success-subtle text-success">表示</span>
+    <% end %>
 
+    <p class="text-muted small mb-0 mt-3">
+      更新日 <%= book.updated_at.to_fs(:short) %>
+    </p>
+  </div>
 </div>

@@ -1,11 +1,8 @@
-<% content_for :title, "New book" %>
+<% content_for :title, "台帳登録" %>
 
-<h1>New book</h1>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h4 mb-0">台帳登録</h1>
+  <%= link_to "一覧へ戻る", books_path, class: "btn btn-outline-secondary" %>
+</div>
 
 <%= render "form", book: @book %>
-
-<br>
-
-<div>
-  <%= link_to "Back to books", books_path %>
-</div>
