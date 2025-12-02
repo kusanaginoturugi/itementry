@@ -16,7 +16,7 @@ class ReceiptsController < ApplicationController
 
   # GET /receipts/new
   def new
-    @receipt = Receipt.new(name: Receipt.next_name, book: Book.default)
+    @receipt = Receipt.new(name: Receipt.next_name, book: Book.current)
     @receipt.receipt_details.build
   end
 
@@ -75,6 +75,7 @@ class ReceiptsController < ApplicationController
 
     def set_books
       @books = Book.order(:id)
+      @current_book = Book.current
     end
 
     # Only allow a list of trusted parameters through.

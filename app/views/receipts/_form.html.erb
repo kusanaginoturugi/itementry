@@ -19,7 +19,9 @@
       </div>
       <div class="col-md-3">
         <%= form.label :book_id, "帳票", class: "form-label" %>
-        <%= form.collection_select :book_id, @books, :id, :title, {}, class: "form-select" %>
+        <%= form.collection_select :book_id, @books, :id, :title,
+          { selected: @current_book&.id },
+          class: "form-select" %>
       </div>
       <div class="col-md-2">
         <label class="form-label text-muted">点数合計</label>

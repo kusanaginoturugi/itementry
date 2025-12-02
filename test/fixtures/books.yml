@@ -4,8 +4,10 @@ unclassified:
   id: 1
   title: "未分類"
   is_hidden: false
+  is_use: true
 
 public_book:
   id: 2
   title: "一般公開"
   is_hidden: false
+  is_use: false

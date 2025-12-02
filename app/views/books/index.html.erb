@@ -1,7 +1,7 @@
-<% content_for :title, "台帳一覧" %>
+<% content_for :title, "帳票一覧" %>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <h1 class="h3 mb-0">台帳一覧</h1>
+  <h1 class="h3 mb-0">帳票一覧</h1>
   <%= link_to "新規登録", new_book_path, class: "btn btn-primary" %>
 </div>
 
@@ -11,7 +11,7 @@
       <table class="table table-hover mb-0 align-middle">
         <thead class="table-light">
           <tr>
-            <th scope="col">台帳名</th>
+            <th scope="col">帳票名</th>
             <th scope="col" class="text-center">表示状態</th>
             <th scope="col" class="text-end text-nowrap">操作</th>
           </tr>
@@ -29,6 +29,11 @@
               </td>
               <td class="text-end">
                 <div class="d-inline-flex gap-1 flex-nowrap">
+                  <% if book.is_use? %>
+                    <span class="badge bg-primary align-self-center">使用中</span>
+                  <% else %>
+                    <%= button_to "選択", use_book_path(book), method: :patch, class: "btn btn-outline-primary btn-sm" %>
+                  <% end %>
                   <%= link_to "詳細", book, class: "btn btn-outline-secondary btn-sm" %>
                   <%= link_to "編集", edit_book_path(book), class: "btn btn-outline-primary btn-sm" %>
                   <%= button_to "削除", book, method: :delete, form: { data: { turbo_confirm: "#{book.title}を削除しますか？" }, class: "d-inline" }, class: "btn btn-outline-danger btn-sm" %>
@@ -40,7 +45,7 @@
       </table>
     <% else %>
       <div class="p-4 text-center text-muted">
-        台帳がまだありません。登録してください。
+        帳票がまだありません。登録してください。
       </div>
     <% end %>
   </div>

@@ -1,9 +1,10 @@
 class BooksController < ApplicationController
-  before_action :set_book, only: %i[ show edit update destroy ]
+  before_action :set_book, only: %i[ show edit update destroy use ]
 
   # GET /books or /books.json
   def index
-    @books = Book.all
+    @books = Book.order(:id)
+    @current_book = Book.current
   end
 
   # GET /books/1 or /books/1.json
@@ -57,6 +58,14 @@ class BooksController < ApplicationController
     end
   end
 
+  def use
+    @book.use!
+    respond_to do |format|
+      format.html { redirect_to books_path, notice: "選択した台帳を使用中に設定しました。" }
+      format.json { head :no_content }
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_book
@@ -65,6 +74,6 @@ class BooksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def book_params
-      params.expect(book: [ :title, :is_hidden ])
+      params.expect(book: [ :title, :is_hidden, :is_use ])
     end
 end

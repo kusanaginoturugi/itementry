@@ -10,6 +10,13 @@ class BooksControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "should select book as current" do
+    patch use_book_url(@book)
+    assert_redirected_to books_url
+    assert_predicate @book.reload, :is_use?
+    assert_equal false, books(:unclassified).reload.is_use?
+  end
+
   test "should get new" do
     get new_book_url
     assert_response :success
