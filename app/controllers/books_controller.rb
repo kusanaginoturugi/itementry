@@ -4,6 +4,8 @@ class BooksController < ApplicationController
   # GET /books or /books.json
   def index
     @books = Book.order(:id)
+    @receipt_counts = Receipt.group(:book_id).count
+    @receipt_totals = Receipt.group(:book_id).sum(:total_value)
     @current_book = Book.current
   end
 

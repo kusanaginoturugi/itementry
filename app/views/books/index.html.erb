@@ -13,6 +13,8 @@
           <tr>
             <th scope="col">帳票名</th>
             <th scope="col" class="text-center">表示状態</th>
+            <th scope="col" class="text-end">レシート数</th>
+            <th scope="col" class="text-end">レシート合計金額</th>
             <th scope="col" class="text-end text-nowrap">操作</th>
           </tr>
         </thead>
@@ -27,6 +29,8 @@
                   <span class="badge bg-success-subtle text-success">表示</span>
                 <% end %>
               </td>
+              <td class="text-end"><%= @receipt_counts[book.id].to_i %></td>
+              <td class="text-end"><%= number_with_delimiter(@receipt_totals[book.id].to_i) %></td>
               <td class="text-end">
                 <div class="d-inline-flex gap-1 flex-nowrap">
                   <% if book.is_use? %>

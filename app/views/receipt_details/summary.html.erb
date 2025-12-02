@@ -12,7 +12,6 @@
       <%= f.submit "適用", class: "btn btn-outline-secondary btn-sm" %>
     <% end %>
     <%= link_to "CSV出力", summary_receipt_details_path(request.query_parameters.merge(format: :csv)), class: "btn btn-outline-primary btn-sm" %>
-    <%= link_to "明細一覧へ", receipt_details_path, class: "btn btn-outline-secondary btn-sm" %>
   </div>
 </div>
 
