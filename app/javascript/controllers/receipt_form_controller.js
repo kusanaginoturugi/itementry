@@ -15,11 +15,11 @@ export default class extends Controller {
     "itemIdField",
     "itemCodeField",
     "valueField",
-    "valueDisplay",
     "itemCodeHidden"
   ]
 
   connect() {
+    this.applyInitialValueLocks()
     this.recalculate()
     this.focusFirstCodeField()
   }
@@ -69,7 +69,6 @@ export default class extends Controller {
       const codeHidden = detail.querySelector("[data-receipt-form-target='itemCodeHidden']")
       const countInput = detail.querySelector("input[name*='[count]']")
       const valueInput = detail.querySelector("input[name*='[value]']")
-      const valueDisplay = detail.querySelector("[data-receipt-form-target='valueDisplay']")
       const sumInput = detail.querySelector("input[name*='[sum_value]']")
       const sumDisplay = detail.querySelector("[data-receipt-form-target='sumDisplay']")
       const count = parseInt(countInput?.value || "0", 10) || 0
@@ -82,7 +81,6 @@ export default class extends Controller {
 
       if (sumInput) sumInput.value = sum
       if (sumDisplay) sumDisplay.textContent = sum.toLocaleString()
-      if (valueDisplay) valueDisplay.textContent = value.toLocaleString()
 
       totalCount += count
       totalValue += sum
@@ -102,15 +100,16 @@ export default class extends Controller {
     const nameDisplay = detail.querySelector("[data-receipt-form-target='itemName']")
     const idField = detail.querySelector("[data-receipt-form-target='itemIdField']")
     const valueField = detail.querySelector("[data-receipt-form-target='valueField']")
-    const valueDisplay = detail.querySelector("[data-receipt-form-target='valueDisplay']")
     const codeHidden = detail.querySelector("[data-receipt-form-target='itemCodeHidden']")
 
     const resetFields = () => {
       if (nameField) nameField.value = ""
       if (nameDisplay) nameDisplay.textContent = "-"
       if (idField) idField.value = ""
-      if (valueField) valueField.value = ""
-      if (valueDisplay) valueDisplay.textContent = "-"
+      if (valueField) {
+        valueField.value = ""
+        this.toggleValueField(valueField, true)
+      }
       if (codeHidden) codeHidden.value = ""
     }
 
@@ -133,8 +132,8 @@ export default class extends Controller {
       if (nameField) nameField.value = data.name || ""
       if (nameDisplay) nameDisplay.textContent = data.name || "-"
       if (idField) idField.value = data.id || ""
-      if (valueField && data.value) valueField.value = data.value
-      if (valueDisplay) valueDisplay.textContent = data.value?.toLocaleString?.() || data.value || "-"
+      if (valueField && data.value !== undefined && data.value !== null) valueField.value = data.value
+      this.toggleValueField(valueField, data.is_variable_value)
       if (codeHidden) codeHidden.value = data.item_code || ""
     } catch (e) {
       resetFields()
@@ -146,5 +145,19 @@ export default class extends Controller {
   focusFirstCodeField() {
     const codeField = this.detailsTarget.querySelector("[data-receipt-form-target='itemCodeField']")
     if (codeField) codeField.focus()
+  }
+
+  applyInitialValueLocks() {
+    this.valueFieldTargets.forEach((field) => {
+      const variable = field.dataset.variableValue
+      this.toggleValueField(field, variable)
+    })
+  }
+
+  toggleValueField(field, isVariable) {
+    if (!field) return
+    const variable = isVariable === undefined ? true : (isVariable === true || isVariable === "true")
+    field.readOnly = !variable
+    field.classList.toggle("bg-light", !variable)
   }
 }

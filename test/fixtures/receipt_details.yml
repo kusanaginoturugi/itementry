@@ -6,8 +6,8 @@ one:
   item_code: "0002"
   item_name: "商品B"
   count: 1
-  value: 1
-  sum_value: 1
+  value: 200
+  sum_value: 200
 
 two:
   item: two
@@ -15,5 +15,5 @@ two:
   item_code: "0002"
   item_name: "商品B"
   count: 1
-  value: 1
-  sum_value: 1
+  value: 200
+  sum_value: 200

@@ -19,8 +19,18 @@
       </div>
       <div class="col-md-2">
         <%= f.label :value, "単価", class: "form-label" %>
-        <p class="form-control-plaintext mb-0" data-receipt-form-target="valueDisplay"><%= number_with_delimiter(f.object.value || 0) %></p>
-        <%= f.hidden_field :value, data: { receipt_form_target: "valueField" } %>
+        <% variable = f.object.item&.is_variable_value %>
+        <%= f.number_field :value,
+          class: "form-control",
+          min: 0,
+          step: 1,
+          required: true,
+          readonly: variable == false,
+          data: {
+            receipt_form_target: "valueField",
+            action: "input->receipt-form#recalculate",
+            variable_value: variable
+          } %>
       </div>
       <div class="col-md-2">
         <%= f.label :sum_value, "小計", class: "form-label" %>

@@ -3,9 +3,11 @@
 one:
   item_code: "0001"
   name: MyText
-  value: 1
+  value: 100
+  is_variable_value: false
 
 two:
   item_code: "0002"
   name: MyText
-  value: 2
+  value: 200
+  is_variable_value: true

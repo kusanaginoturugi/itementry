@@ -13,6 +13,7 @@
 ActiveRecord::Schema[8.1].define(version: 2025_12_01_115805) do
   create_table "items", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.boolean "is_variable_value", default: false, null: false
     t.text "item_code", default: "", null: false
     t.text "name", null: false
     t.datetime "updated_at", null: false

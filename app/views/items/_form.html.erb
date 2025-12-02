@@ -22,9 +22,14 @@
       <%= form.text_area :name, class: "form-control", rows: 2, required: true %>
     </div>
 
-    <div class="mb-4">
+    <div class="mb-3">
       <%= form.label :value, "価格", class: "form-label" %>
       <%= form.number_field :value, class: "form-control", min: 0, step: 1, required: true %>
+    </div>
+
+    <div class="form-check form-switch mb-4">
+      <%= form.check_box :is_variable_value, class: "form-check-input", role: "switch" %>
+      <%= form.label :is_variable_value, "単価を明細で変更可能にする", class: "form-check-label" %>
     </div>
 
     <div class="d-flex gap-2">

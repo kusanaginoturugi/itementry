@@ -119,6 +119,42 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
+  test "allows overriding value when item is variable priced" do
+    assert_difference(["Receipt.count", "ReceiptDetail.count"], 1) do
+      post receipts_url, params: {
+        receipt: {
+          name: "40",
+          receipt_details_attributes: [
+            { item_id: items(:two).id, item_code: items(:two).item_code, item_name: "商品B", count: 2, value: 999 }
+          ]
+        }
+      }
+    end
+
+    receipt = Receipt.last
+    detail = receipt.receipt_details.first
+    assert_equal 999, detail.value
+    assert_equal 1998, receipt.total_value
+  end
+
+  test "forces fixed-price items to use master value" do
+    assert_difference(["Receipt.count", "ReceiptDetail.count"], 1) do
+      post receipts_url, params: {
+        receipt: {
+          name: "41",
+          receipt_details_attributes: [
+            { item_id: items(:one).id, item_code: items(:one).item_code, item_name: "商品A", count: 2, value: 999 }
+          ]
+        }
+      }
+    end
+
+    receipt = Receipt.last
+    detail = receipt.receipt_details.first
+    assert_equal 100, detail.value
+    assert_equal 200, receipt.total_value
+  end
+
   test "rejects duplicate item codes in a single receipt" do
     assert_no_difference(["Receipt.count", "ReceiptDetail.count"]) do
       post receipts_url, params: {

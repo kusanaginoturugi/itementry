@@ -14,7 +14,7 @@ class ItemsController < ApplicationController
   def lookup
     item = Item.find_by(item_code: params[:item_code])
     if item
-      render json: item.slice(:id, :name, :value, :item_code)
+      render json: item.slice(:id, :name, :value, :item_code, :is_variable_value)
     else
       head :not_found
     end
@@ -75,7 +75,7 @@ class ItemsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def item_params
-      params.expect(item: [ :name, :value, :item_code ])
+      params.expect(item: [ :name, :value, :item_code, :is_variable_value ])
     end
 
     def order_clause
