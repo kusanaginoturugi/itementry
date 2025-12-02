@@ -10,7 +10,8 @@ class ReceiptsController < ApplicationController
       .includes(:receipt_details)
       .left_joins(:receipt_details)
       .group("receipts.id")
-    scoped = scoped.where(book_id: params[:book_id]) if params[:book_id].present?
+    @selected_book_id = params.key?(:book_id) ? params[:book_id].presence : @current_book&.id
+    scoped = scoped.where(book_id: @selected_book_id) if @selected_book_id.present?
     @receipts = scoped.order(order_clause)
     @item_kinds_by_receipt = ReceiptDetail.where(receipt_id: @receipts).group(:receipt_id).distinct.count(:item_code)
     @item_kinds_by_receipt.default = 0

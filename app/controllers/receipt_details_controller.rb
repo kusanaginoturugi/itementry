@@ -5,7 +5,8 @@ class ReceiptDetailsController < ApplicationController
   def index
     @books = Book.order(:id)
     @current_book = Book.current
-    scoped = params[:book_id].present? ? ReceiptDetail.joins(:receipt).where(receipts: { book_id: params[:book_id] }) : ReceiptDetail.all
+    @selected_book_id = params.key?(:book_id) ? params[:book_id].presence : @current_book&.id
+    scoped = @selected_book_id.present? ? ReceiptDetail.joins(:receipt).where(receipts: { book_id: @selected_book_id }) : ReceiptDetail.all
     @receipt_details = scoped
   end
 
@@ -13,9 +14,8 @@ class ReceiptDetailsController < ApplicationController
     @books = Book.order(:id)
     @current_book = Book.current
     scope = ReceiptDetail
-    if params[:book_id].present?
-      scope = scope.joins(:receipt).where(receipts: { book_id: params[:book_id] })
-    end
+    @selected_book_id = params.key?(:book_id) ? params[:book_id].presence : @current_book&.id
+    scope = scope.joins(:receipt).where(receipts: { book_id: @selected_book_id }) if @selected_book_id.present?
     @summaries = scope
       .select("item_id, item_code, item_name, SUM(count) AS total_count, SUM(sum_value) AS total_value")
       .group(:item_id, :item_code, :item_name)

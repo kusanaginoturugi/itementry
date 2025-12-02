@@ -22,6 +22,24 @@ class ReceiptDetailsControllerTest < ActionDispatch::IntegrationTest
     assert_equal codes.sort.reverse, codes
   end
 
+  test "summary defaults to current book when no book_id param" do
+    Book.update_all(is_use: false)
+    books(:public_book).update!(is_use: true)
+    ReceiptDetail.delete_all
+    Receipt.delete_all
+
+    r1 = Receipt.create!(name: "10", book: books(:unclassified))
+    r1.receipt_details.create!(item: items(:one), item_code: "001", item_name: "A", count: 1, value: 100, sum_value: 100)
+
+    r2 = Receipt.create!(name: "20", book: books(:public_book))
+    r2.receipt_details.create!(item: items(:two), item_code: "002", item_name: "B", count: 2, value: 200, sum_value: 400)
+
+    get summary_receipt_details_url
+    assert_response :success
+    codes = css_select("tbody tr td:first-child").map { |td| td.text.strip }
+    assert_equal ["002"], codes
+  end
+
   test "should get summary csv" do
     get summary_receipt_details_url(format: :csv)
     assert_response :success

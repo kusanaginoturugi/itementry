@@ -49,6 +49,21 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     assert_equal ["1", "2"], names
   end
 
+  test "index defaults to current book when no book_id param" do
+    Book.update_all(is_use: false)
+    books(:public_book).update!(is_use: true)
+    ReceiptDetail.delete_all
+    Receipt.delete_all
+
+    Receipt.create!(name: "10", book: books(:unclassified))
+    Receipt.create!(name: "20", book: books(:public_book))
+
+    get receipts_url
+    assert_response :success
+    names = css_select("table tbody tr td:first-child").map { |td| td.text.strip }
+    assert_equal ["20"], names
+  end
+
   test "index can sort by total value ascending" do
     ReceiptDetail.delete_all
     Receipt.delete_all
