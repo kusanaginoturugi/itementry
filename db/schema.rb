@@ -10,7 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_01_115805) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_02_112417) do
+  create_table "books", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.boolean "is_hidden"
+    t.string "title"
+    t.datetime "updated_at", null: false
+  end
+
   create_table "items", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.boolean "is_variable_value", default: false, null: false

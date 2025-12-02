@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :books
   root "receipts#index"
 
   resources :receipt_details do
