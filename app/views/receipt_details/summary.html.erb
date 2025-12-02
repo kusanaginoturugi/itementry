@@ -40,9 +40,9 @@
           <th class="text-end"><%= number_with_delimiter(@summaries.sum(&:total_value)) %></th>
         </tr>
       </thead>
-      <tbody>
-        <% @summaries.each do |row| %>
-          <tr>
+        <tbody>
+          <% @summaries.each do |row| %>
+          <tr style="<%= item_code_style(row.item_code) %>">
             <td class="text-monospace"><%= row.item_code %></td>
             <td><%= row.item_name %></td>
             <td class="text-end"><%= row.total_count %></td>
