@@ -65,8 +65,11 @@
             <% @items.each do |item| %>
               <div class="col-lg-2 col-md-3 col-sm-4">
                 <div class="border rounded p-2 h-100" style="background-color: <%= item_code_tone(item.item_code) %>;">
-                  <div class="text-monospace fw-bold mb-1"><%= item.item_code %></div>
-                  <div class="small text-truncate"><%= item.name %></div>
+                  <div class="d-flex justify-content-between align-items-start mb-1">
+                    <div class="text-monospace fw-bold"><%= item.item_code %></div>
+                    <div class="small text-muted ms-2"><%= number_with_delimiter(item.value) %></div>
+                  </div>
+                  <div class="small fw-semibold text-truncate"><%= item.name %></div>
                 </div>
               </div>
             <% end %>
