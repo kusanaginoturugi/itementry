@@ -15,6 +15,13 @@ class ReceiptDetailsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "summary can sort by total_value desc" do
+    get summary_receipt_details_url(sort: "total_value", direction: "desc")
+    assert_response :success
+    codes = css_select("tbody tr td:first-child").map { |td| td.text.strip }
+    assert_equal codes.sort.reverse, codes
+  end
+
   test "should get summary csv" do
     get summary_receipt_details_url(format: :csv)
     assert_response :success

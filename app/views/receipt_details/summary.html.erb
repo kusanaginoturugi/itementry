@@ -20,10 +20,18 @@
     <table class="table table-hover mb-0 align-middle">
       <thead class="table-light">
         <tr>
-          <th scope="col">商品コード</th>
-          <th scope="col">商品名</th>
-          <th scope="col" class="text-end">合計個数</th>
-          <th scope="col" class="text-end">合計金額</th>
+          <th scope="col">
+            <%= link_to "商品コード", summary_receipt_details_path(request.query_parameters.merge(sort: "item_code", direction: toggle_direction_for("item_code"))), class: "text-decoration-none" %>
+          </th>
+          <th scope="col">
+            <%= link_to "商品名", summary_receipt_details_path(request.query_parameters.merge(sort: "item_name", direction: toggle_direction_for("item_name"))), class: "text-decoration-none" %>
+          </th>
+          <th scope="col" class="text-end">
+            <%= link_to "合計個数", summary_receipt_details_path(request.query_parameters.merge(sort: "total_count", direction: toggle_direction_for("total_count"))), class: "text-decoration-none" %>
+          </th>
+          <th scope="col" class="text-end">
+            <%= link_to "合計金額", summary_receipt_details_path(request.query_parameters.merge(sort: "total_value", direction: toggle_direction_for("total_value"))), class: "text-decoration-none" %>
+          </th>
         </tr>
         <tr class="table-secondary">
           <th>合計</th>

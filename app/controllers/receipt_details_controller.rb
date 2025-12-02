@@ -19,7 +19,7 @@ class ReceiptDetailsController < ApplicationController
     @summaries = scope
       .select("item_id, item_code, item_name, SUM(count) AS total_count, SUM(sum_value) AS total_value")
       .group(:item_id, :item_code, :item_name)
-      .order(:item_code)
+      .order(summary_order_clause)
 
     respond_to do |format|
       format.html
@@ -102,5 +102,17 @@ class ReceiptDetailsController < ApplicationController
         ].map { |val| %("#{val.to_s.gsub('"', '""')}") }.join(",")
       end
       ([header.join(",")] + body).join("\n") + "\n"
+    end
+
+    def summary_sort_column
+      %w[item_code item_name total_count total_value].include?(params[:sort]) ? params[:sort] : 'item_code'
+    end
+
+    def summary_sort_direction
+      %w[asc desc].include?(params[:direction]) ? params[:direction] : 'asc'
+    end
+
+    def summary_order_clause
+      "#{summary_sort_column} #{summary_sort_direction}"
     end
 end
