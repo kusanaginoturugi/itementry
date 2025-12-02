@@ -1,6 +1,7 @@
 class ReceiptsController < ApplicationController
   before_action :set_receipt, only: %i[ show edit update destroy ]
   before_action :set_items, only: %i[ new edit create update ]
+  before_action :set_books, only: %i[ new edit create update ]
 
   # GET /receipts or /receipts.json
   def index
@@ -15,7 +16,7 @@ class ReceiptsController < ApplicationController
 
   # GET /receipts/new
   def new
-    @receipt = Receipt.new(name: Receipt.next_name)
+    @receipt = Receipt.new(name: Receipt.next_name, book: Book.default)
     @receipt.receipt_details.build
   end
 
@@ -72,10 +73,15 @@ class ReceiptsController < ApplicationController
       @items = Item.order(:item_code)
     end
 
+    def set_books
+      @books = Book.order(:id)
+    end
+
     # Only allow a list of trusted parameters through.
   def receipt_params
       params.require(:receipt).permit(
         :name,
+        :book_id,
         receipt_details_attributes: %i[
           id item_id item_code item_name count value sum_value _destroy
         ]

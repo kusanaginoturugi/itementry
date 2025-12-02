@@ -36,6 +36,13 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "new preselects default book" do
+    get new_receipt_url
+    assert_response :success
+    selected = css_select("select[name='receipt[book_id]'] option[selected]").first
+    assert_equal books(:unclassified).id.to_s, selected[:value]
+  end
+
   test "new prepopulates next numeric name" do
     ReceiptDetail.delete_all
     Receipt.delete_all
@@ -67,6 +74,7 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
       post receipts_url, params: {
         receipt: {
           name: "10",
+          book_id: books(:unclassified).id,
           receipt_details_attributes: [
             { item_id: items(:one).id, item_code: items(:one).item_code, item_name: "商品A", count: 2, value: 100 },
             { item_id: items(:two).id, item_code: items(:two).item_code, item_name: "商品B", count: 1, value: 200 }
@@ -130,6 +138,7 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
       post receipts_url, params: {
         receipt: {
           name: "abc",
+          book_id: books(:unclassified).id,
           receipt_details_attributes: [
             { item_id: items(:one).id, item_code: items(:one).item_code, item_name: "商品A", count: 1, value: 100 }
           ]
@@ -181,6 +190,7 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
       post receipts_url, params: {
         receipt: {
           name: "20",
+          book_id: books(:unclassified).id,
           receipt_details_attributes: [
             { item_id: items(:one).id, item_code: items(:one).item_code, item_name: "商品A", count: 1, value: 100 },
             { item_id: items(:one).id, item_code: items(:one).item_code, item_name: "商品A", count: 1, value: 100 }
@@ -212,6 +222,7 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     patch receipt_url(@receipt), params: {
       receipt: {
         name: "999",
+        book_id: books(:public_book).id,
         receipt_details_attributes: [
           { id: @receipt.receipt_details.first.id, item_id: items(:one).id, item_code: items(:one).item_code, item_name: "商品A", count: 3, value: 100 }
         ]

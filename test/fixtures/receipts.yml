@@ -4,8 +4,10 @@ one:
   name: "1"
   total_count: 1
   total_value: 200
+  book_id: 1
 
 two:
   name: "2"
   total_count: 1
   total_value: 200
+  book_id: 1

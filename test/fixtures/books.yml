@@ -1,9 +1,11 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  title: MyString
+unclassified:
+  id: 1
+  title: "未分類"
   is_hidden: false
 
-two:
-  title: MyString
+public_book:
+  id: 2
+  title: "一般公開"
   is_hidden: false

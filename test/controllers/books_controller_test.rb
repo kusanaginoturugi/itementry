@@ -2,7 +2,7 @@ require "test_helper"
 
 class BooksControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @book = books(:one)
+    @book = books(:public_book)
   end
 
   test "should get index" do
@@ -17,7 +17,7 @@ class BooksControllerTest < ActionDispatch::IntegrationTest
 
   test "should create book" do
     assert_difference("Book.count") do
-      post books_url, params: { book: { is_hidden: @book.is_hidden, title: @book.title } }
+      post books_url, params: { book: { is_hidden: false, title: "新しい台帳" } }
     end
 
     assert_redirected_to book_url(Book.last)
@@ -34,7 +34,7 @@ class BooksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update book" do
-    patch book_url(@book), params: { book: { is_hidden: @book.is_hidden, title: @book.title } }
+    patch book_url(@book), params: { book: { is_hidden: @book.is_hidden, title: "更新後台帳" } }
     assert_redirected_to book_url(@book)
   end
 
