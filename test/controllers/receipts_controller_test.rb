@@ -77,6 +77,22 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
+  test "rejects duplicate item codes in a single receipt" do
+    assert_no_difference(["Receipt.count", "ReceiptDetail.count"]) do
+      post receipts_url, params: {
+        receipt: {
+          name: "20",
+          receipt_details_attributes: [
+            { item_id: items(:one).id, item_code: items(:one).item_code, item_name: "商品A", count: 1, value: 100 },
+            { item_id: items(:one).id, item_code: items(:one).item_code, item_name: "商品A", count: 1, value: 100 }
+          ]
+        }
+      }
+    end
+
+    assert_response :unprocessable_entity
+  end
+
   test "should show receipt" do
     get receipt_url(@receipt)
     assert_response :success
