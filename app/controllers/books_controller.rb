@@ -61,7 +61,7 @@ class BooksController < ApplicationController
   def use
     @book.use!
     respond_to do |format|
-      format.html { redirect_to books_path, notice: "選択した台帳を使用中に設定しました。" }
+      format.html { redirect_to books_path, notice: "選択した帳票を使用中に設定しました。" }
       format.json { head :no_content }
     end
   end
