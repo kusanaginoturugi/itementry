@@ -4,7 +4,7 @@ one:
   item: two
   receipt: one
   item_code: "0002"
-  item_name: MyText
+  item_name: "商品B"
   count: 1
   value: 1
   sum_value: 1
@@ -13,7 +13,7 @@ two:
   item: two
   receipt: two
   item_code: "0002"
-  item_name: MyText
+  item_name: "商品B"
   count: 1
   value: 1
   sum_value: 1

@@ -9,7 +9,8 @@
       </div>
       <div class="col-md-3">
         <%= f.label :item_name, "商品名", class: "form-label" %>
-        <p class="form-control-plaintext mb-0" data-receipt-form-target="itemName">-</p>
+        <% display_name = f.object.item_name.presence || f.object.item&.name || "-" %>
+        <p class="form-control-plaintext mb-0" data-receipt-form-target="itemName"><%= display_name %></p>
         <%= f.hidden_field :item_name, data: { receipt_form_target: "itemNameField" } %>
       </div>
       <div class="col-md-2">
@@ -18,12 +19,12 @@
       </div>
       <div class="col-md-2">
         <%= f.label :value, "単価", class: "form-label" %>
-        <p class="form-control-plaintext mb-0" data-receipt-form-target="valueDisplay">0</p>
+        <p class="form-control-plaintext mb-0" data-receipt-form-target="valueDisplay"><%= number_with_delimiter(f.object.value || 0) %></p>
         <%= f.hidden_field :value, data: { receipt_form_target: "valueField" } %>
       </div>
       <div class="col-md-2">
         <%= f.label :sum_value, "小計", class: "form-label" %>
-        <p class="form-control-plaintext mb-0" data-receipt-form-target="sumDisplay">0</p>
+        <p class="form-control-plaintext mb-0" data-receipt-form-target="sumDisplay"><%= number_with_delimiter(f.object.sum_value || 0) %></p>
         <%= f.hidden_field :sum_value, data: { receipt_form_target: "sumField" } %>
       </div>
       <div class="col-md-1 d-flex gap-1 justify-content-end">

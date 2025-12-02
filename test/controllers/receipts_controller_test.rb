@@ -145,6 +145,12 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "edit shows existing item names" do
+    get edit_receipt_url(@receipt)
+    assert_response :success
+    assert_includes response.body, "商品B"
+  end
+
   test "should update receipt" do
     patch receipt_url(@receipt), params: {
       receipt: {

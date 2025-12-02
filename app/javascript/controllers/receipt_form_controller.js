@@ -120,6 +120,12 @@ export default class extends Controller {
       return
     }
 
+    // If fields are prefilled (edit page), avoid refetching same code
+    if (codeHidden?.value === code && (nameField?.value || nameDisplay?.textContent?.trim() !== "-")) {
+      this.recalculate()
+      return
+    }
+
     try {
       const response = await fetch(`/items/lookup.json?item_code=${encodeURIComponent(code)}`)
       if (!response.ok) throw new Error("Not found")
