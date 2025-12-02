@@ -17,11 +17,15 @@
             <th scope="col">
               <%= link_to "商品名", items_path(sort: "name", direction: toggle_direction_for("name")), class: "text-decoration-none" %>
             </th>
+            <th scope="col" class="text-center">
+              <%= link_to "商品種類", items_path(sort: "item_type", direction: toggle_direction_for("item_type")), class: "text-decoration-none" %>
+            </th>
             <th scope="col" class="text-end">
               <%= link_to "価格", items_path(sort: "value", direction: toggle_direction_for("value")), class: "text-decoration-none" %>
             </th>
-            <th scope="col" class="text-center">商品種類</th>
-            <th scope="col" class="text-end">還付金</th>
+            <th scope="col" class="text-end">
+              <%= link_to "還付金", items_path(sort: "refund", direction: toggle_direction_for("refund")), class: "text-decoration-none" %>
+            </th>
             <th scope="col" class="text-end text-nowrap">操作</th>
           </tr>
         </thead>
@@ -31,8 +35,8 @@
             <tr>
               <td class="fw-semibold" style="<%= cell_style %>"><%= item.item_code %></td>
               <td class="fw-semibold" style="<%= cell_style %>"><%= item.name %></td>
-              <td class="text-end" style="<%= cell_style %>"><%= number_with_delimiter(item.value) %></td>
               <td class="text-center" style="<%= cell_style %>"><%= item_type_label(item.item_type) %></td>
+              <td class="text-end" style="<%= cell_style %>"><%= number_with_delimiter(item.value) %></td>
               <td class="text-end" style="<%= cell_style %>"><%= number_with_delimiter(item.refund) %></td>
               <td class="text-end" style="<%= cell_style %>">
                 <div class="d-inline-flex gap-1 flex-nowrap">

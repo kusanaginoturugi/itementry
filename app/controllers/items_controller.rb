@@ -84,7 +84,7 @@ class ItemsController < ApplicationController
     end
 
     def current_sort_column
-      %w[item_code name value].include?(params[:sort]) ? params[:sort] : 'item_code'
+      %w[item_code name value item_type refund].include?(params[:sort]) ? params[:sort] : 'item_code'
     end
 
     def current_sort_direction
