@@ -3,11 +3,20 @@ class ReceiptDetailsController < ApplicationController
 
   # GET /receipt_details or /receipt_details.json
   def index
-    @receipt_details = ReceiptDetail.all
+    @books = Book.order(:id)
+    @current_book = Book.current
+    scoped = params[:book_id].present? ? ReceiptDetail.joins(:receipt).where(receipts: { book_id: params[:book_id] }) : ReceiptDetail.all
+    @receipt_details = scoped
   end
 
   def summary
-    @summaries = ReceiptDetail
+    @books = Book.order(:id)
+    @current_book = Book.current
+    scope = ReceiptDetail
+    if params[:book_id].present?
+      scope = scope.joins(:receipt).where(receipts: { book_id: params[:book_id] })
+    end
+    @summaries = scope
       .select("item_id, item_code, item_name, SUM(count) AS total_count, SUM(sum_value) AS total_value")
       .group(:item_id, :item_code, :item_name)
       .order(:item_code)

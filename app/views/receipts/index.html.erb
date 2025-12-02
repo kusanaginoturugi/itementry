@@ -2,7 +2,17 @@
 
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h1 class="h3 mb-0">レシート一覧</h1>
-  <%= link_to "新規登録", new_receipt_path, class: "btn btn-primary" %>
+  <div class="d-flex gap-2">
+    <%= form_with url: receipts_path, method: :get, local: true, class: "d-flex gap-2" do |f| %>
+      <%= f.label :book_id, "帳票", class: "form-label mb-0 align-self-center" %>
+      <%= f.select :book_id,
+            options_from_collection_for_select(@books, :id, :title, params[:book_id].presence || @current_book&.id),
+            { include_blank: "すべて" },
+            class: "form-select form-select-sm" %>
+      <%= f.submit "適用", class: "btn btn-outline-secondary btn-sm" %>
+    <% end %>
+    <%= link_to "新規登録", new_receipt_path, class: "btn btn-primary" %>
+  </div>
 </div>
 
 <div class="card shadow-sm">

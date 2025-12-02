@@ -1,11 +1,13 @@
 class ReceiptsController < ApplicationController
   before_action :set_receipt, only: %i[ show edit update destroy ]
   before_action :set_items, only: %i[ new edit create update ]
-  before_action :set_books, only: %i[ new edit create update ]
+  before_action :set_books, only: %i[ index new edit create update ]
 
   # GET /receipts or /receipts.json
   def index
-    @receipts = Receipt.includes(:receipt_details)
+    scoped = Receipt.includes(:receipt_details)
+    scoped = scoped.where(book_id: params[:book_id]) if params[:book_id].present?
+    @receipts = scoped
     @item_kinds_by_receipt = ReceiptDetail.where(receipt_id: @receipts).group(:receipt_id).distinct.count(:item_code)
     @item_kinds_total = @item_kinds_by_receipt.values.sum
   end
