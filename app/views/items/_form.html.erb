@@ -23,8 +23,18 @@
     </div>
 
     <div class="mb-3">
+      <%= form.label :item_type, "商品種類", class: "form-label" %>
+      <%= form.number_field :item_type, class: "form-control", min: 0, step: 1, required: true %>
+    </div>
+
+    <div class="mb-3">
       <%= form.label :value, "価格", class: "form-label" %>
       <%= form.number_field :value, class: "form-control", min: 0, step: 1, required: true %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :refund, "還付金", class: "form-label" %>
+      <%= form.number_field :refund, class: "form-control", min: 0, step: 1, required: true %>
     </div>
 
     <div class="form-check form-switch mb-4">

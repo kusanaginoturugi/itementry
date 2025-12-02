@@ -2,7 +2,7 @@ require 'test_helper'
 require 'rake'
 require 'csv'
 
-class ItemsImportTaskTest < Minitest::Test
+class ItemsImportTaskTest < ActiveSupport::TestCase
   TASK_NAME = 'items:import_items3'
 
   def setup

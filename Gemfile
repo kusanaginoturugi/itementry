@@ -18,6 +18,7 @@ gem "stimulus-rails"
 gem "jbuilder"
 # CSV parsing (Ruby 3.4 no longer ships this as a default library)
 gem "csv"
+gem "railroady", group: :development
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"

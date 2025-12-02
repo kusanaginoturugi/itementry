@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_02_120000) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_02_123000) do
   create_table "books", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.boolean "is_hidden"
@@ -23,7 +23,9 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_02_120000) do
     t.datetime "created_at", null: false
     t.boolean "is_variable_value", default: false, null: false
     t.text "item_code", default: "", null: false
+    t.integer "item_type", default: 1, null: false
     t.text "name", null: false
+    t.integer "refund", default: 0, null: false
     t.datetime "updated_at", null: false
     t.integer "value", null: false
     t.index ["item_code"], name: "index_items_on_item_code", unique: true

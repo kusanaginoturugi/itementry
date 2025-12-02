@@ -12,6 +12,8 @@ ja:
       item:
         name: 商品名
         value: 価格
+        item_type: 商品種類
+        refund: 還付金
       receipt:
         name: レシート名
         total_count: 点数合計
@@ -22,7 +24,11 @@ ja:
         item_name: 商品名
         count: 個数
         value: 単価
+        item_type: 商品種類
+        refund: 還付金
         sum_value: 小計
+        sum_refund: 還付金合計
+	sum_payment: 支払合計
   helpers:
     submit:
       create: "%{model} を作成"

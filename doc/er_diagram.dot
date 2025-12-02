@@ -1,0 +1,11 @@
+digraph models_diagram {
+	graph[overlap=false, splines=true, bgcolor="none"]
+	"ApplicationRecord" []
+	"Book" [shape=Mrecord, label="{Book|id :INTEGER\ltitle :varchar\lis_hidden :boolean\lcreated_at :datetime(6)\lupdated_at :datetime(6)\lis_use :boolean\l}"]
+	"Item" [shape=Mrecord, label="{Item|id :INTEGER\lname :TEXT\lvalue :INTEGER\lcreated_at :datetime(6)\lupdated_at :datetime(6)\litem_code :TEXT\lis_variable_value :boolean\litem_type :INTEGER\lrefund :INTEGER\l}"]
+	"Receipt" [shape=Mrecord, label="{Receipt|id :INTEGER\lname :TEXT\ltotal_count :INTEGER\ltotal_value :INTEGER\lcreated_at :datetime(6)\lupdated_at :datetime(6)\lbook_id :INTEGER\l}"]
+	"ReceiptDetail" [shape=Mrecord, label="{ReceiptDetail|id :INTEGER\litem_id :INTEGER\litem_name :TEXT\lcount :INTEGER\lvalue :INTEGER\lsum_value :INTEGER\lcreated_at :datetime(6)\lupdated_at :datetime(6)\lreceipt_id :INTEGER\litem_code :TEXT\l}"]
+	"Book" -> "Receipt" [arrowtail=crow, arrowhead=crow, dir=both color="#4F5403"]
+	"Receipt" -> "ReceiptDetail" [arrowtail=crow, arrowhead=crow, dir=both color="#38F35E"]
+	"ReceiptDetail" -> "Item" [arrowtail=crow, arrowhead=crow, dir=both color="#9E2A59"]
+}
