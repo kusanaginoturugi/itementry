@@ -6,6 +6,7 @@ export default class extends Controller {
     "template",
     "totalCount",
     "totalValue",
+    "itemKinds",
     "destroyField",
     "itemName",
     "itemNameField",
@@ -60,9 +61,12 @@ export default class extends Controller {
   recalculate() {
     let totalCount = 0
     let totalValue = 0
+    let kindsCount = 0
 
     this.detailsTarget.querySelectorAll("[data-receipt-form-target='detail']").forEach((detail) => {
       if (detail.classList.contains("d-none")) return
+      const codeField = detail.querySelector("[data-receipt-form-target='itemCodeField']")
+      const codeHidden = detail.querySelector("[data-receipt-form-target='itemCodeHidden']")
       const countInput = detail.querySelector("input[name*='[count]']")
       const valueInput = detail.querySelector("input[name*='[value]']")
       const valueDisplay = detail.querySelector("[data-receipt-form-target='valueDisplay']")
@@ -71,6 +75,10 @@ export default class extends Controller {
       const count = parseInt(countInput?.value || "0", 10) || 0
       const value = parseInt(valueInput?.value || "0", 10) || 0
       const sum = count * value
+
+      if ((codeField?.value?.trim() || codeHidden?.value?.trim())) {
+        kindsCount += 1
+      }
 
       if (sumInput) sumInput.value = sum
       if (sumDisplay) sumDisplay.textContent = sum.toLocaleString()
@@ -82,6 +90,7 @@ export default class extends Controller {
 
     if (this.hasTotalCountTarget) this.totalCountTarget.textContent = totalCount
     if (this.hasTotalValueTarget) this.totalValueTarget.textContent = totalValue.toLocaleString()
+    if (this.hasItemKindsTarget) this.itemKindsTarget.textContent = kindsCount
   }
 
   async loadItemName(event) {
