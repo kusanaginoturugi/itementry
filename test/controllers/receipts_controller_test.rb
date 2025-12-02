@@ -62,6 +62,48 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 400, receipt.total_value
   end
 
+  test "ignores details without item_code" do
+    assert_difference("Receipt.count", 1) do
+      assert_difference("ReceiptDetail.count", 1) do
+      post receipts_url, params: {
+        receipt: {
+          name: "30",
+          receipt_details_attributes: [
+            { item_id: items(:one).id, item_code: "", item_name: "", count: 1, value: 100 },
+            { item_id: items(:two).id, item_code: items(:two).item_code, item_name: "商品B", count: 2, value: 200 }
+          ]
+        }
+      }
+    end
+    end
+
+    receipt = Receipt.order(:created_at).last
+    assert_equal 1, receipt.receipt_details.count
+    assert_equal 2, receipt.total_count
+    assert_equal 400, receipt.total_value
+  end
+
+  test "ignores details with zero count" do
+    assert_difference("Receipt.count", 1) do
+      assert_difference("ReceiptDetail.count", 1) do
+      post receipts_url, params: {
+        receipt: {
+          name: "31",
+          receipt_details_attributes: [
+            { item_id: items(:one).id, item_code: items(:one).item_code, item_name: "商品A", count: 0, value: 100 },
+            { item_id: items(:two).id, item_code: items(:two).item_code, item_name: "商品B", count: 3, value: 200 }
+          ]
+        }
+      }
+    end
+    end
+
+    receipt = Receipt.order(:created_at).last
+    assert_equal 1, receipt.receipt_details.count
+    assert_equal 3, receipt.total_count
+    assert_equal 600, receipt.total_value
+  end
+
   test "rejects non numeric receipt name" do
     assert_no_difference("Receipt.count") do
       post receipts_url, params: {

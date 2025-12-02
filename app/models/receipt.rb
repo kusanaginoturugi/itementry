@@ -6,6 +6,7 @@ class Receipt < ApplicationRecord
   require 'set'
 
   before_validation :assign_default_name, on: :create
+  before_validation :discard_blank_or_zero_details
   before_validation :calculate_totals
   before_save :calculate_totals
 
@@ -25,6 +26,16 @@ class Receipt < ApplicationRecord
     return if name.present?
 
     self.name = self.class.next_name
+  end
+
+  def discard_blank_or_zero_details
+    receipt_details.each do |detail|
+      next if detail.marked_for_destruction?
+
+      code = detail.item_code.to_s.strip
+      count = detail.count.to_i
+      detail.mark_for_destruction if code.blank? || count.zero?
+    end
   end
 
   def validate_unique_item_codes
