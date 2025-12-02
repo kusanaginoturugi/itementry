@@ -41,7 +41,6 @@
                 <div class="d-inline-flex gap-1 flex-nowrap">
                   <%= link_to "詳細", item, class: "btn btn-outline-secondary btn-sm" %>
                   <%= link_to "編集", edit_item_path(item), class: "btn btn-outline-primary btn-sm" %>
-                  <%= button_to "削除", item, method: :delete, form: { data: { turbo_confirm: "#{item.name}を削除しますか？" }, class: "d-inline" }, class: "btn btn-outline-danger btn-sm" %>
                 </div>
               </td>
             </tr>
