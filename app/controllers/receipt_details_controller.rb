@@ -7,7 +7,7 @@ class ReceiptDetailsController < ApplicationController
     @current_book = Book.current
     @selected_book_id = params.key?(:book_id) ? params[:book_id].presence : @current_book&.id
     scoped = @selected_book_id.present? ? ReceiptDetail.joins(:receipt).where(receipts: { book_id: @selected_book_id }) : ReceiptDetail.all
-    @receipt_details = scoped
+    @receipt_details = scoped.order(index_order_clause)
   end
 
   def summary
@@ -17,14 +17,14 @@ class ReceiptDetailsController < ApplicationController
     @selected_book_id = params.key?(:book_id) ? params[:book_id].presence : @current_book&.id
     scope = scope.joins(:receipt).where(receipts: { book_id: @selected_book_id }) if @selected_book_id.present?
     @summaries = scope
-      .select("item_id, item_code, item_name, SUM(count) AS total_count, SUM(sum_value) AS total_value")
+      .select("item_id, item_code, item_name, SUM(count) AS total_count, SUM(sum_value) AS total_value, SUM(sum_refund) AS total_refund, SUM(sum_payment) AS total_payment")
       .group(:item_id, :item_code, :item_name)
       .order(summary_order_clause)
 
     respond_to do |format|
       format.html
       format.csv do
-        send_data build_csv(@summaries), filename: "receipt_details_summary-#{Time.zone.now.strftime('%Y%m%d%H%M%S')}.csv"
+        send_data build_csv(@summaries), filename: "receipt_details_summary-#{@current_book.title}-#{Time.zone.now.strftime('%Y%m%d%H%M%S')}.csv"
       end
     end
   end
@@ -129,13 +129,15 @@ class ReceiptDetailsController < ApplicationController
     end
 
     def build_csv(rows)
-      header = %w[item_code item_name total_count total_value]
+      header = %w[item_code item_name total_count total_value total_refund total_payment]
       body = rows.map do |row|
         [
           row.item_code,
           row.item_name,
           row.total_count,
-          row.total_value
+          row.total_value,
+          row.total_refund,
+          row.total_payment
         ].map { |val| %("#{val.to_s.gsub('"', '""')}") }.join(",")
       end
       ([header.join(",")] + body).join("\n") + "\n"
@@ -143,6 +145,18 @@ class ReceiptDetailsController < ApplicationController
 
     def summary_sort_column
       %w[item_code item_name total_count total_value].include?(params[:sort]) ? params[:sort] : 'item_code'
+    end
+
+    def index_sort_column
+      %w[item_code item_name count value sum_value].include?(params[:sort]) ? params[:sort] : "item_code"
+    end
+
+    def index_sort_direction
+      %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
+    end
+
+    def index_order_clause
+      "#{index_sort_column} #{index_sort_direction}"
     end
 
     def summary_sort_direction
