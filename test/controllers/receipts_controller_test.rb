@@ -121,6 +121,22 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     assert_equal %w[010 200 300], item_codes
   end
 
+  test "new shows item type filter with blank option" do
+    get new_receipt_url
+    assert_response :success
+
+    assert_select "select[data-receipt-form-target='itemTypeFilter']" do
+      assert_select "option[value='']", text: "すべて"
+      ApplicationHelper::ITEM_TYPE_LABELS.each do |value, label|
+        assert_select "option[value='#{value}']", text: label
+      end
+    end
+
+    assert_select "[data-receipt-form-target='itemCard']", minimum: 1 do |cards|
+      assert cards.first["data-item-type"]
+    end
+  end
+
   test "should create receipt" do
     assert_difference("Receipt.count", 1) do
       assert_difference("ReceiptDetail.count", 2) do

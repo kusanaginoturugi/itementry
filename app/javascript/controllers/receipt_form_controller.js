@@ -1,5 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
+const ITEM_TYPE_FILTER_STORAGE_KEY = "receipt_form_item_type_filter"
+
 export default class extends Controller {
   static targets = [
     "details",
@@ -15,13 +17,17 @@ export default class extends Controller {
     "itemIdField",
     "itemCodeField",
     "valueField",
-    "itemCodeHidden"
+    "itemCodeHidden",
+    "itemTypeFilter",
+    "itemCard"
   ]
 
   connect() {
     this.applyInitialValueLocks()
+    this.restoreItemTypeFilter()
     this.recalculate()
     this.focusFirstCodeField()
+    this.filterItemsByType()
   }
 
   addDetail(event) {
@@ -89,6 +95,35 @@ export default class extends Controller {
     if (this.hasTotalCountTarget) this.totalCountTarget.textContent = totalCount
     if (this.hasTotalValueTarget) this.totalValueTarget.textContent = totalValue.toLocaleString()
     if (this.hasLineCountTarget) this.lineCountTarget.textContent = lineCount
+  }
+
+  filterItemsByType() {
+    if (!this.hasItemTypeFilterTarget || !this.hasItemCardTarget) return
+    const selectedType = this.itemTypeFilterTarget.value
+    this.itemCardTargets.forEach((card) => {
+      const type = card.dataset.itemType ?? ""
+      const visible = selectedType === "" || selectedType === type
+      card.classList.toggle("d-none", !visible)
+    })
+    this.persistItemTypeFilter(selectedType)
+  }
+
+  restoreItemTypeFilter() {
+    if (!this.hasItemTypeFilterTarget) return
+    try {
+      const stored = window.localStorage.getItem(ITEM_TYPE_FILTER_STORAGE_KEY)
+      if (stored !== null) this.itemTypeFilterTarget.value = stored
+    } catch (e) {
+      // ignore if localStorage is unavailable
+    }
+  }
+
+  persistItemTypeFilter(value) {
+    try {
+      window.localStorage.setItem(ITEM_TYPE_FILTER_STORAGE_KEY, value)
+    } catch (e) {
+      // ignore if localStorage is unavailable
+    }
   }
 
   async loadItemName(event) {
