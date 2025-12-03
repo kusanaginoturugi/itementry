@@ -5,3 +5,8 @@ body {
 table, th, td {
   font-family: inherit;
 }
+
+.navbar,
+.pdf-hide {
+  display: none !important;
+}
