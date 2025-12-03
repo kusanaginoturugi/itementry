@@ -70,6 +70,12 @@ class ReceiptDetailsControllerTest < ActionDispatch::IntegrationTest
     assert_equal [item_a.item_code], codes
   end
 
+  test "should render pdf for summary by item type" do
+    get summary_by_item_type_receipt_details_url(format: :pdf)
+    assert_response :success
+    assert_includes ["application/pdf", "text/html"], response.media_type
+  end
+
   test "should get new" do
     get new_receipt_detail_url
     assert_response :success

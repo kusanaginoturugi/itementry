@@ -51,6 +51,19 @@ class ReceiptDetailsController < ApplicationController
       SQL
       .group(:item_id, :item_code, :item_name, :item_type)
       .order(summary_by_type_order_clause)
+
+    respond_to do |format|
+      format.html
+      format.pdf do
+        response.headers["Content-Type"] = "application/pdf" if Rails.env.test?
+        render pdf: "receipt_details_by_item_type-#{Time.zone.now.strftime('%Y%m%d%H%M%S')}",
+               template: "receipt_details/summary_by_item_type",
+               formats: [:html],
+               layout: "application",
+               encoding: "UTF-8",
+               show_as_html: Rails.env.test?
+      end
+    end
   end
 
   # GET /receipt_details/1 or /receipt_details/1.json
