@@ -1,7 +1,10 @@
 <% content_for :title, "商品種類別明細集計" %>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <h1 class="h4 mb-0">商品種類別明細集計</h1>
+  <% type_label = @selected_item_type.present? ? item_type_label(@selected_item_type) : nil %>
+  <h1 class="h4 mb-0">
+    商品種類別明細集計<%= "(#{type_label})" if type_label.present? %>
+  </h1>
   <div class="btn-group">
     <% unless request.format.pdf? %>
       <%= form_with url: summary_by_item_type_receipt_details_path, method: :get, local: true, class: "d-flex gap-2 flex-wrap pdf-hide" do |f| %>
@@ -22,19 +25,6 @@
         <%= f.submit "適用", class: "btn btn-outline-secondary btn-sm" %>
       <% end %>
       <%= link_to "PDF出力", summary_by_item_type_receipt_details_path(request.query_parameters.merge(format: :pdf)), class: "btn btn-outline-primary btn-sm pdf-hide" %>
-    <% else %>
-      <div class="d-flex gap-3">
-        <% if @selected_book_id.present? %>
-          <% selected_book = @books.find { |b| b.id == @selected_book_id.to_i } %>
-          <span><strong>帳票:</strong> <%= selected_book&.title || "すべて" %></span>
-        <% else %>
-          <span><strong>帳票:</strong> すべて</span>
-        <% end %>
-        <span class="ms-3">
-          <strong>商品種類:</strong>
-          <%= @selected_item_type.present? ? item_type_label(@selected_item_type) : "すべて" %>
-        </span>
-      </div>
     <% end %>
   </div>
 </div>
