@@ -26,6 +26,9 @@
 
 <div class="card shadow-sm">
   <div class="card-body p-0">
+    <% if defined?(wicked_pdf_stylesheet_link_tag) %>
+      <%= wicked_pdf_stylesheet_link_tag "pdf" %>
+    <% end %>
     <table class="table table-hover mb-0 align-middle">
       <thead class="table-light">
         <tr>

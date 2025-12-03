@@ -1,0 +1,7 @@
+body {
+  font-family: "IPAPGothic", "Noto Sans CJK JP", "TakaoPGothic", "Noto Sans CJK", sans-serif;
+}
+
+table, th, td {
+  font-family: inherit;
+}
