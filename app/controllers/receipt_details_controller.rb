@@ -29,6 +29,30 @@ class ReceiptDetailsController < ApplicationController
     end
   end
 
+  def summary_by_item_type
+    @books = Book.order(:id)
+    @current_book = Book.current
+    scope = ReceiptDetail
+    @selected_book_id = params.key?(:book_id) ? params[:book_id].presence : @current_book&.id
+    @selected_item_type = params[:item_type].presence
+    scope = scope.joins(:receipt).where(receipts: { book_id: @selected_book_id }) if @selected_book_id.present?
+    scope = scope.where(item_type: @selected_item_type) if @selected_item_type.present?
+    @summaries = scope
+      .select(<<~SQL)
+        item_id,
+        item_code,
+        item_name,
+        item_type,
+        SUM(count) AS total_count,
+        SUM(sum_value) AS total_value,
+        SUM(refund) AS total_refund,
+        SUM(sum_refund) AS total_sum_refund,
+        SUM(sum_payment) AS total_sum_payment
+      SQL
+      .group(:item_id, :item_code, :item_name, :item_type)
+      .order(summary_by_type_order_clause)
+  end
+
   # GET /receipt_details/1 or /receipt_details/1.json
   def show
   end
@@ -114,5 +138,17 @@ class ReceiptDetailsController < ApplicationController
 
     def summary_order_clause
       "#{summary_sort_column} #{summary_sort_direction}"
+    end
+
+    def summary_by_type_sort_column
+      %w[item_code item_name total_count total_value total_refund total_sum_refund total_sum_payment].include?(params[:sort]) ? params[:sort] : "item_code"
+    end
+
+    def summary_by_type_sort_direction
+      %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
+    end
+
+    def summary_by_type_order_clause
+      "#{summary_by_type_sort_column} #{summary_by_type_sort_direction}"
     end
 end

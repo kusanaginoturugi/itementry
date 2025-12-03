@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   resources :receipt_details do
     collection do
       get :summary
+      get :summary_by_item_type
     end
   end
   resources :receipts
