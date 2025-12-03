@@ -13,9 +13,9 @@ class ReceiptsController < ApplicationController
     @selected_book_id = params.key?(:book_id) ? params[:book_id].presence : @current_book&.id
     scoped = scoped.where(book_id: @selected_book_id) if @selected_book_id.present?
     @receipts = scoped.order(order_clause)
-    @item_kinds_by_receipt = ReceiptDetail.where(receipt_id: @receipts).group(:receipt_id).distinct.count(:item_code)
-    @item_kinds_by_receipt.default = 0
-    @item_kinds_total = @item_kinds_by_receipt.values.sum
+    @line_counts_by_receipt = ReceiptDetail.where(receipt_id: @receipts).group(:receipt_id).count
+    @line_counts_by_receipt.default = 0
+    @line_counts_total = @line_counts_by_receipt.values.sum
   end
 
   # GET /receipts/1 or /receipts/1.json
@@ -87,7 +87,7 @@ class ReceiptsController < ApplicationController
     end
 
     # Only allow a list of trusted parameters through.
-  def receipt_params
+    def receipt_params
       params.require(:receipt).permit(
         :name,
         :book_id,
@@ -98,23 +98,24 @@ class ReceiptsController < ApplicationController
     end
 
     def sort_column
-      %w[name item_kinds total_value].include?(params[:sort]) ? params[:sort] : 'name'
+      %w[name line_count total_value].include?(params[:sort]) ? params[:sort] : "name"
     end
 
     def sort_direction
-      %w[asc desc].include?(params[:direction]) ? params[:direction] : 'desc'
+      %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
     end
 
     def toggle_direction_for(column)
-      return 'asc' unless sort_column == column
-      sort_direction == 'asc' ? 'desc' : 'asc'
+      return "asc" unless sort_column == column
+
+      sort_direction == "asc" ? "desc" : "asc"
     end
 
     def order_clause
       case sort_column
-      when 'item_kinds'
-        Arel.sql("COUNT(DISTINCT receipt_details.item_code) #{sort_direction}")
-      when 'total_value'
+      when "line_count"
+        Arel.sql("COUNT(receipt_details.id) #{sort_direction}")
+      when "total_value"
         { total_value: sort_direction }
       else
         { name: sort_direction }

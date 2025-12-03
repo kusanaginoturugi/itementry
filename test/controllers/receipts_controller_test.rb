@@ -10,7 +10,7 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "index shows product kind counts instead of total count" do
+  test "index shows line counts based on receipt rows" do
     ReceiptDetail.delete_all
     Receipt.delete_all
 
@@ -19,19 +19,22 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
       item: items(:one), item_code: items(:one).item_code, item_name: "商品A", count: 1, value: 100, sum_value: 100
     )
     receipt.receipt_details.create!(
-      item: items(:two), item_code: items(:two).item_code, item_name: "商品B", count: 3, value: 200, sum_value: 600
+      item: items(:one), item_code: items(:one).item_code, item_name: "商品A", count: 3, value: 200, sum_value: 600
+    )
+    receipt.receipt_details.create!(
+      item: items(:two), item_code: items(:two).item_code, item_name: "商品B", count: 2, value: 200, sum_value: 400
     )
 
     get receipts_url
     assert_response :success
 
     kind_counts = css_select("tbody tr td:nth-child(2)").map { |td| td.text.strip.to_i }
-    assert_equal [2], kind_counts
+    assert_equal [ 3 ], kind_counts
     total_kinds = css_select("thead tr.table-secondary th:nth-child(2)").first.text.strip
-    assert_equal "2", total_kinds
+    assert_equal "3", total_kinds
   end
 
-  test "index can sort by item kinds descending" do
+  test "index can sort by line count descending" do
     ReceiptDetail.delete_all
     Receipt.delete_all
 
@@ -42,11 +45,11 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     r2 = Receipt.create!(name: "2")
     r2.receipt_details.create!(item: items(:one), item_code: "001", item_name: "A", count: 1, value: 100, sum_value: 100)
 
-    get receipts_url(sort: "item_kinds", direction: "desc")
+    get receipts_url(sort: "line_count", direction: "desc")
     assert_response :success
 
     names = css_select("table tbody tr td:first-child").map { |td| td.text.strip }
-    assert_equal ["1", "2"], names
+    assert_equal [ "1", "2" ], names
   end
 
   test "index defaults to current book when no book_id param" do
@@ -61,7 +64,7 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     get receipts_url
     assert_response :success
     names = css_select("table tbody tr td:first-child").map { |td| td.text.strip }
-    assert_equal ["20"], names
+    assert_equal [ "20" ], names
   end
 
   test "index can sort by total value ascending" do
@@ -78,7 +81,7 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
 
     names = css_select("table tbody tr td:first-child").map { |td| td.text.strip }
-    assert_equal ["1", "2"], names
+    assert_equal [ "1", "2" ], names
   end
 
   test "should get new" do
@@ -200,7 +203,7 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "allows overriding value when item is variable priced" do
-    assert_difference(["Receipt.count", "ReceiptDetail.count"], 1) do
+    assert_difference([ "Receipt.count", "ReceiptDetail.count" ], 1) do
       post receipts_url, params: {
         receipt: {
           name: "40",
@@ -218,7 +221,7 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "forces fixed-price items to use master value" do
-    assert_difference(["Receipt.count", "ReceiptDetail.count"], 1) do
+    assert_difference([ "Receipt.count", "ReceiptDetail.count" ], 1) do
       post receipts_url, params: {
         receipt: {
           name: "41",
@@ -235,27 +238,33 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 200, receipt.total_value
   end
 
-  test "rejects duplicate item codes in a single receipt" do
-    assert_no_difference(["Receipt.count", "ReceiptDetail.count"]) do
-      post receipts_url, params: {
-        receipt: {
-          name: "20",
-          book_id: books(:unclassified).id,
-          receipt_details_attributes: [
-            { item_id: items(:one).id, item_code: items(:one).item_code, item_name: "商品A", count: 1, value: 100 },
-            { item_id: items(:one).id, item_code: items(:one).item_code, item_name: "商品A", count: 1, value: 100 }
-          ]
+  test "allows duplicate item codes in a single receipt" do
+    assert_difference("Receipt.count", 1) do
+      assert_difference("ReceiptDetail.count", 2) do
+        post receipts_url, params: {
+          receipt: {
+            name: "20",
+            book_id: books(:unclassified).id,
+            receipt_details_attributes: [
+              { item_id: items(:one).id, item_code: items(:one).item_code, item_name: "商品A", count: 1, value: 100 },
+              { item_id: items(:one).id, item_code: items(:one).item_code, item_name: "商品A", count: 2, value: 100 }
+            ]
+          }
         }
-      }
+      end
     end
 
-    assert_response :unprocessable_entity
+    assert_redirected_to new_receipt_url
+    receipt = Receipt.last
+    assert_equal 2, receipt.receipt_details.count
+    assert_equal 3, receipt.total_count
+    assert_equal 300, receipt.total_value
   end
 
   test "should show receipt" do
     get receipt_url(@receipt)
     assert_response :success
-    assert_includes response.body, "商品種類数"
+    assert_includes response.body, "登録行数"
     refute_includes response.body, "点数合計"
   end
 

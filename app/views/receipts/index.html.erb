@@ -25,7 +25,7 @@
               <%= link_to "レシート名", receipts_path(params.permit(:book_id).to_h.merge(sort: "name", direction: toggle_direction_for("name"))), class: "text-decoration-none" %>
             </th>
             <th scope="col" class="text-end">
-              <%= link_to "商品種類数", receipts_path(params.permit(:book_id).to_h.merge(sort: "item_kinds", direction: toggle_direction_for("item_kinds"))), class: "text-decoration-none" %>
+              <%= link_to "登録行数", receipts_path(params.permit(:book_id).to_h.merge(sort: "line_count", direction: toggle_direction_for("line_count"))), class: "text-decoration-none" %>
             </th>
             <th scope="col" class="text-end">
               <%= link_to "金額合計", receipts_path(params.permit(:book_id).to_h.merge(sort: "total_value", direction: toggle_direction_for("total_value"))), class: "text-decoration-none" %>
@@ -34,7 +34,7 @@
           </tr>
           <tr class="table-secondary">
             <th scope="col">合計</th>
-            <th scope="col" class="text-end"><%= @item_kinds_total %></th>
+            <th scope="col" class="text-end"><%= @line_counts_total %></th>
             <th scope="col" class="text-end"><%= number_with_delimiter(@receipts.to_a.sum(&:total_value)) %></th>
             <th></th>
           </tr>
@@ -43,7 +43,7 @@
           <% @receipts.each do |receipt| %>
             <tr>
               <td class="fw-semibold"><%= receipt.name.presence || "名称未設定" %></td>
-              <td class="text-end"><%= @item_kinds_by_receipt[receipt.id].to_i %></td>
+              <td class="text-end"><%= @line_counts_by_receipt[receipt.id].to_i %></td>
               <td class="text-end"><%= number_with_delimiter(receipt.total_value) %></td>
               <td class="text-end">
                 <div class="d-inline-flex gap-1 flex-nowrap">

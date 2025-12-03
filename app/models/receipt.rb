@@ -4,8 +4,6 @@ class Receipt < ApplicationRecord
 
   accepts_nested_attributes_for :receipt_details, allow_destroy: true
 
-  require 'set'
-
   before_validation :assign_default_name, on: :create
   before_validation :assign_default_book
   before_validation :discard_blank_or_zero_details
@@ -14,7 +12,6 @@ class Receipt < ApplicationRecord
 
   validates :name, presence: true, format: { with: /\A\d+\z/, message: "は数字のみで入力してください" }
   validates :total_count, :total_value, presence: true
-  validate :validate_unique_item_codes
 
   private
 
@@ -42,23 +39,6 @@ class Receipt < ApplicationRecord
       count = detail.count.to_i
       detail.mark_for_destruction if code.blank? || count.zero?
     end
-  end
-
-  def validate_unique_item_codes
-    seen = Set.new
-    duplicates = Set.new
-
-    receipt_details.reject(&:marked_for_destruction?).each do |detail|
-      code = detail.item_code.to_s.strip
-      next if code.blank?
-
-      duplicates.add(code) if seen.include?(code)
-      seen.add(code)
-    end
-
-    return if duplicates.empty?
-
-    errors.add(:base, "同じ商品コードを1つのレシートに複数登録できません（#{duplicates.to_a.join(', ')}）")
   end
 
   class << self

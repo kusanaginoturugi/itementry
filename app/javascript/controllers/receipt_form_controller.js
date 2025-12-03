@@ -6,7 +6,7 @@ export default class extends Controller {
     "template",
     "totalCount",
     "totalValue",
-    "itemKinds",
+    "lineCount",
     "destroyField",
     "itemName",
     "itemNameField",
@@ -61,7 +61,7 @@ export default class extends Controller {
   recalculate() {
     let totalCount = 0
     let totalValue = 0
-    let kindsCount = 0
+    let lineCount = 0
 
     this.detailsTarget.querySelectorAll("[data-receipt-form-target='detail']").forEach((detail) => {
       if (detail.classList.contains("d-none")) return
@@ -76,7 +76,7 @@ export default class extends Controller {
       const sum = count * value
 
       if ((codeField?.value?.trim() || codeHidden?.value?.trim())) {
-        kindsCount += 1
+        lineCount += 1
       }
 
       if (sumInput) sumInput.value = sum
@@ -88,7 +88,7 @@ export default class extends Controller {
 
     if (this.hasTotalCountTarget) this.totalCountTarget.textContent = totalCount
     if (this.hasTotalValueTarget) this.totalValueTarget.textContent = totalValue.toLocaleString()
-    if (this.hasItemKindsTarget) this.itemKindsTarget.textContent = kindsCount
+    if (this.hasLineCountTarget) this.lineCountTarget.textContent = lineCount
   }
 
   async loadItemName(event) {
