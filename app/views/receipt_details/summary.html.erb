@@ -11,7 +11,7 @@
             class: "form-select form-select-sm" %>
       <%= f.submit "適用", class: "btn btn-outline-secondary btn-sm" %>
     <% end %>
-    <%= link_to "CSV出力", summary_receipt_details_path(request.query_parameters.merge(format: :csv)), class: "btn btn-outline-primary btn-sm" %>
+    <%= link_to "CSV出力", summary_receipt_details_path(request.query_parameters.merge(format: :csv)), class: "btn btn-outline-primary btn-sm d-flex align-items-center justify-content-center" %>
   </div>
 </div>
 
