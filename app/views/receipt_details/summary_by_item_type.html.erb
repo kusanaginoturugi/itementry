@@ -3,7 +3,11 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
   <% type_label = @selected_item_type.present? ? item_type_label(@selected_item_type) : nil %>
   <h1 class="h4 mb-0">
-    商品種類別明細集計<%= "(#{type_label})" if type_label.present? %>
+    <% if type_label == "" %>
+      レシート明細集計(すべて）
+    <% else %>
+      レシート明細集計<%= "(#{type_label})" if type_label.present? %>
+    <% end %>
   </h1>
   <div class="btn-group">
     <% unless request.format.pdf? %>
