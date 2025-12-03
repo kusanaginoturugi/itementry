@@ -38,3 +38,6 @@
 
 # Ignore vendor/bundle
 /vendor/bundle
+
+# Ignore backup file
+*~
