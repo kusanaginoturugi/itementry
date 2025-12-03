@@ -107,6 +107,21 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "11", name_value
   end
 
+  test "new prepopulates next numeric name scoped to current book" do
+    ReceiptDetail.delete_all
+    Receipt.delete_all
+    Book.update_all(is_use: false)
+    books(:public_book).update!(is_use: true)
+
+    Receipt.create!(name: "10", book: books(:unclassified))
+    Receipt.create!(name: "5", book: books(:public_book))
+
+    get new_receipt_url
+    assert_response :success
+    name_value = css_select("input[name='receipt[name]']").first[:value]
+    assert_equal "6", name_value
+  end
+
   test "new displays item codes ordered by item_code" do
     ReceiptDetail.delete_all
     Receipt.delete_all

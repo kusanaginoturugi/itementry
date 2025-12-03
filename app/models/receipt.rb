@@ -42,9 +42,9 @@ class Receipt < ApplicationRecord
   end
 
   class << self
-    def next_name
-      last_numeric = order(created_at: :desc).detect { |receipt| receipt.name.to_s.match?(/\A\d+\z/) }
-      last_value = last_numeric&.name.to_i
+    def next_name(book: Book.current)
+      scope = book ? where(book_id: book.id) : all
+      last_value = scope.pluck(:name).filter { |name| name.to_s.match?(/\A\d+\z/) }.map(&:to_i).max.to_i
       (last_value + 1).to_s
     end
   end
