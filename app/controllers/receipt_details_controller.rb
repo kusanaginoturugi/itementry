@@ -7,7 +7,10 @@ class ReceiptDetailsController < ApplicationController
     @current_book = Book.current
     @selected_book_id = params.key?(:book_id) ? params[:book_id].presence : @current_book&.id
     scoped = @selected_book_id.present? ? ReceiptDetail.joins(:receipt).where(receipts: { book_id: @selected_book_id }) : ReceiptDetail.all
-    @receipt_details = scoped.order(index_order_clause)
+    @receipt_details = scoped
+      .joins(:receipt)
+      .select("receipt_details.*, receipts.name AS receipt_name")
+      .order(index_order_clause)
   end
 
   def summary
@@ -148,7 +151,7 @@ class ReceiptDetailsController < ApplicationController
     end
 
     def index_sort_column
-      %w[item_code item_name count value sum_value].include?(params[:sort]) ? params[:sort] : "item_code"
+      %w[receipt_name item_code item_name count value sum_value].include?(params[:sort]) ? params[:sort] : "receipt_name"
     end
 
     def index_sort_direction

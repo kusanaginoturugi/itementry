@@ -22,6 +22,9 @@
         <thead class="table-light">
           <tr>
             <th scope="col">
+              <%= link_to "レシート名", receipt_details_path(request.query_parameters.merge(sort: "receipt_name", direction: toggle_direction_for("receipt_name"))), class: "text-decoration-none" %>
+            </th>
+            <th scope="col">
               <%= link_to "商品コード", receipt_details_path(request.query_parameters.merge(sort: "item_code", direction: toggle_direction_for("item_code"))), class: "text-decoration-none" %>
             </th>
             <th scope="col">
@@ -42,6 +45,7 @@
         <tbody>
           <% @receipt_details.each do |detail| %>
             <tr>
+              <td><%= detail.receipt_name.presence || detail.receipt_id %></td>
               <td><%= detail.item_code %></td>
               <td><%= detail.item_name %></td>
             <td class="text-end"><%= detail.count %></td>
