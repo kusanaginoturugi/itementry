@@ -4,7 +4,9 @@ module ApplicationHelper
     2 => "祈願会等",
     3 => "観音堂",
     4 => "加賀御神水",
-    5 => "太明星"
+    5 => "太明星",
+    6 => "聖明王院",
+    7 => "天通新聞社"
   }.freeze
 
   def item_type_options
