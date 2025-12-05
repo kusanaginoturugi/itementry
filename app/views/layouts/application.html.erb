@@ -51,6 +51,12 @@
               <%= link_to "商品種類別明細集計", summary_by_item_type_receipt_details_path, class: "nav-link" %>
             </li>
           </ul>
+          <div class="ms-auto d-flex align-items-center gap-2 text-white small">
+            <button class="btn btn-sm btn-outline-light d-flex align-items-center" type="button" data-bs-toggle="modal" data-bs-target="#appVersionModal">
+              <span class="me-1"></span>
+              <span>Version</span>
+            </button>
+          </div>
         </div>
       </div>
     </nav>
@@ -72,5 +78,27 @@
 
       <%= yield %>
     </main>
+
+    <div class="modal fade" id="appVersionModal" tabindex="-1" aria-labelledby="appVersionModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="appVersionModalLabel">バージョン情報</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+          </div>
+          <div class="modal-body">
+            <dl class="row mb-0">
+              <dt class="col-sm-4">環境</dt>
+              <dd class="col-sm-8"><%= Rails.env %></dd>
+              <dt class="col-sm-4">Git</dt>
+              <dd class="col-sm-8"><%= ENV["APP_VERSION"] || ENV["HEROKU_SLUG_COMMIT"] || ENV["GIT_REV"] || `git rev-parse --short HEAD`.chomp %></dd>
+            </dl>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
