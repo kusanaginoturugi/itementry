@@ -10,7 +10,6 @@ class ReceiptsController < ApplicationController
       .includes(:receipt_details)
       .left_joins(:receipt_details)
       .group("receipts.id")
-    @selected_book_id = params.key?(:book_id) ? params[:book_id].presence : @current_book&.id
     scoped = scoped.where(book_id: @selected_book_id) if @selected_book_id.present?
     @receipts = scoped.order(order_clause)
     @line_counts_by_receipt = ReceiptDetail.where(receipt_id: @receipts).group(:receipt_id).count
@@ -82,8 +81,9 @@ class ReceiptsController < ApplicationController
     end
 
     def set_books
-      @books = Book.order(:id)
-      @current_book = Book.current
+      @books = available_books
+      @current_book = @books.find_by(is_use: true)
+      @selected_book_id = selected_book_id(@books, @current_book&.id)
     end
 
     # Only allow a list of trusted parameters through.
@@ -120,5 +120,16 @@ class ReceiptsController < ApplicationController
       else
         { name: sort_direction }
       end
+    end
+
+    def available_books
+      Book.where(is_lock: false).order(:id)
+    end
+
+    def selected_book_id(books, fallback_id)
+      raw_id = params.key?(:book_id) ? params[:book_id].presence : fallback_id
+      return unless raw_id.present?
+
+      books.exists?(id: raw_id) ? raw_id : nil
     end
 end

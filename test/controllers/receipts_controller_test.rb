@@ -10,6 +10,14 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "locked books are not selectable in index filter" do
+    get receipts_url
+    assert_response :success
+
+    option_values = css_select("select[name='book_id'] option").map { |opt| opt["value"] }.compact
+    refute_includes option_values, books(:locked_book).id.to_s
+  end
+
   test "index shows line counts based on receipt rows" do
     ReceiptDetail.delete_all
     Receipt.delete_all

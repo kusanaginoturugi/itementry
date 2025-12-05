@@ -8,3 +8,13 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+.receipt-form-sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 1020; /* keep above card body content */
+  background: #fff;
+  padding: 0.5rem 0 1rem;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+}
