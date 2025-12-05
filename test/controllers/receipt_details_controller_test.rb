@@ -15,6 +15,14 @@ class ReceiptDetailsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "locked books are not selectable in index filter" do
+    get receipt_details_url
+    assert_response :success
+
+    option_values = css_select("select[name='book_id'] option").map { |opt| opt["value"] }.compact
+    refute_includes option_values, books(:locked_book).id.to_s
+  end
+
   test "summary can sort by total_value desc" do
     get summary_receipt_details_url(sort: "total_value", direction: "desc")
     assert_response :success
@@ -51,8 +59,8 @@ class ReceiptDetailsControllerTest < ActionDispatch::IntegrationTest
     Receipt.delete_all
     Item.delete_all
 
-    item_a = Item.create!(item_code: "100", name: "A", value: 100, item_type: 0)
-    item_b = Item.create!(item_code: "200", name: "B", value: 200, item_type: 1)
+    item_a = Item.create!(item_code: "100", name: "A", value: 100, item_type: 0, refund: 10)
+    item_b = Item.create!(item_code: "200", name: "B", value: 200, item_type: 1, refund: 20)
 
     r1 = Receipt.create!(name: "10")
     r1.receipt_details.create!(item: item_a, item_code: item_a.item_code, item_name: item_a.name, item_type: item_a.item_type, count: 1, value: 100, sum_value: 100, refund: 10, sum_refund: 10, sum_payment: 90)
@@ -68,6 +76,9 @@ class ReceiptDetailsControllerTest < ActionDispatch::IntegrationTest
 
     codes = css_select("tbody tr td:first-child").map { |td| td.text.strip }
     assert_equal [item_a.item_code], codes
+
+    refund_values = css_select("tbody tr td:nth-child(5)").map { |td| td.text.strip }
+    assert_equal ["10"], refund_values
   end
 
   test "should render pdf for summary by item type" do

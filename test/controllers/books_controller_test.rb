@@ -24,10 +24,12 @@ class BooksControllerTest < ActionDispatch::IntegrationTest
 
   test "should create book" do
     assert_difference("Book.count") do
-      post books_url, params: { book: { is_hidden: false, title: "新しい台帳" } }
+      post books_url, params: { book: { is_lock: true, title: "新しい台帳" } }
     end
 
-    assert_redirected_to book_url(Book.last)
+    created_book = Book.last
+    assert_redirected_to book_url(created_book)
+    assert_predicate created_book, :is_lock?
   end
 
   test "should show book" do
@@ -41,8 +43,9 @@ class BooksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update book" do
-    patch book_url(@book), params: { book: { is_hidden: @book.is_hidden, title: "更新後台帳" } }
+    patch book_url(@book), params: { book: { is_lock: true, title: "更新後台帳" } }
     assert_redirected_to book_url(@book)
+    assert_predicate @book.reload, :is_lock?
   end
 
   test "should destroy book" do

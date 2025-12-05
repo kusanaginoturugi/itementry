@@ -71,7 +71,7 @@
             <%= link_to "合計金額", summary_by_item_type_receipt_details_path(request.query_parameters.merge(sort: "total_value", direction: toggle_direction_for("total_value"))), class: "text-decoration-none" %>
           </th>
           <th scope="col" class="text-end">
-            <%= link_to "還付単価", summary_by_item_type_receipt_details_path(request.query_parameters.merge(sort: "total_refund", direction: toggle_direction_for("total_refund"))), class: "text-decoration-none" %>
+            <%= link_to "還付単価", summary_by_item_type_receipt_details_path(request.query_parameters.merge(sort: "refund", direction: toggle_direction_for("refund"))), class: "text-decoration-none" %>
           </th>
           <th scope="col" class="text-end">
             <%= link_to "還付合計", summary_by_item_type_receipt_details_path(request.query_parameters.merge(sort: "total_sum_refund", direction: toggle_direction_for("total_sum_refund"))), class: "text-decoration-none" %>
@@ -85,7 +85,7 @@
           <th></th>
           <th class="text-end"><%= @summaries.sum(&:total_count) %></th>
           <th class="text-end"><%= number_with_delimiter(@summaries.sum(&:total_value)) %></th>
-          <th class="text-end"><%= number_with_delimiter(@summaries.sum(&:total_refund)) %></th>
+          <th class="text-end"></th>
           <th class="text-end"><%= number_with_delimiter(@summaries.sum(&:total_sum_refund)) %></th>
           <th class="text-end"><%= number_with_delimiter(@summaries.sum(&:total_sum_payment)) %></th>
         </tr>
@@ -98,7 +98,7 @@
             <td style="<%= tone_style %>"><%= row.item_name %></td>
             <td class="text-end" style="<%= tone_style %>"><%= row.total_count %></td>
             <td class="text-end" style="<%= tone_style %>"><%= number_with_delimiter(row.total_value) %></td>
-            <td class="text-end" style="<%= tone_style %>"><%= number_with_delimiter(row.total_refund) %></td>
+            <td class="text-end" style="<%= tone_style %>"><%= number_with_delimiter(row.refund) %></td>
             <td class="text-end" style="<%= tone_style %>"><%= number_with_delimiter(row.total_sum_refund) %></td>
             <td class="text-end" style="<%= tone_style %>"><%= number_with_delimiter(row.total_sum_payment) %></td>
           </tr>

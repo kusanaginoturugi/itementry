@@ -8,7 +8,8 @@ ja:
     attributes:
       book:
         title: 帳票名
-        is_hidden: 非表示
+        is_lock: ロック中
+        is_use: 使用中
       item:
         name: 商品名
         value: 価格

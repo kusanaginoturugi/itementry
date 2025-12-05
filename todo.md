@@ -34,3 +34,46 @@
 -[x] 現状確認。レシートを保存するときに更新される情報を一覧にして
 -[x] レシート名の自動採番をルール変更。利用中の帳票の中で一番大きな数字にプラス１した値を仕様する
 -[x] /receipt_details/summary_by_item_type にPDF出力を追加したいが、どのgemを使えばいいと思う？
+
+
+
+
+› 本番サーバのproduction.sqlite3 を開発環境のdevelopment.sqlite3 にコピーしたいので、手順を書いて
+
+
+• SQLiteファイルを直接コピーする手順（安全重視の流れ）です。
+
+  1. 本番側でアプリ停止
+      - Railsサーバやジョブ実行プロセスを止め、DBファイルへの書き込みが発生しない状態にする。
+  2. 本番DBを安全に取得
+      - 本番サーバでダンプを作るのが壊れにくいです。例:
+
+        cd /path/to/app
+        sqlite3 db/production.sqlite3 ".backup 'production_backup.sqlite3'"
+      - あるいは .dump でも:
+
+        sqlite3 db/production.sqlite3 ".dump" > production_dump.sql
+  3. 開発環境に持ってくる
+      - バックアップファイル(production_backup.sqlite3)またはダンプ(production_dump.sql)を SCP/rsync で開発マシンにコピー。
+  4. 開発環境で反映
+      - 既存の開発DBを退避または削除（必要に応じてバックアップ）:
+
+        mv db/development.sqlite3 db/development.sqlite3.bak   # 必要なら
+      - バックアップファイルを使う場合:
+
+        cp /path/to/production_backup.sqlite3 db/development.sqlite3
+      - ダンプを使う場合は空ファイルから再構築:
+
+        rm -f db/development.sqlite3
+        sqlite3 db/development.sqlite3 < production_dump.sql
+  5. マイグレーション整合性確認
+      - 開発環境で bin/rails db:migrate を実行し、スキーマが開発コードと一致していることを確認。
+  6. アプリ起動と動作確認
+      - bin/rails db:migrate 後、bin/rails s で起動して動作確認。
+
+  ポイント:
+
+  - 本番データを持ち込む際は機密・個人情報の扱いに注意。
+  - ダンプ方式の方が壊れにくく、SQLiteバージョン差にも強いです。
+  - キャッシュ/セッション用の SQLite（例: production_cache.sqlite3）は通常コピー不要です。
+

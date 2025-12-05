@@ -1,11 +1,9 @@
 class ReceiptDetailsController < ApplicationController
   before_action :set_receipt_detail, only: %i[ show edit update destroy ]
+  before_action :load_book_filters, only: %i[ index summary summary_by_item_type ]
 
   # GET /receipt_details or /receipt_details.json
   def index
-    @books = Book.order(:id)
-    @current_book = Book.current
-    @selected_book_id = params.key?(:book_id) ? params[:book_id].presence : @current_book&.id
     scoped = @selected_book_id.present? ? ReceiptDetail.joins(:receipt).where(receipts: { book_id: @selected_book_id }) : ReceiptDetail.all
     @receipt_details = scoped
       .joins(:receipt)
@@ -14,10 +12,7 @@ class ReceiptDetailsController < ApplicationController
   end
 
   def summary
-    @books = Book.order(:id)
-    @current_book = Book.current
     scope = ReceiptDetail
-    @selected_book_id = params.key?(:book_id) ? params[:book_id].presence : @current_book&.id
     scope = scope.joins(:receipt).where(receipts: { book_id: @selected_book_id }) if @selected_book_id.present?
     @summaries = scope
       .select("item_id, item_code, item_name, SUM(count) AS total_count, SUM(sum_value) AS total_value, SUM(sum_refund) AS total_refund, SUM(sum_payment) AS total_payment")
@@ -33,10 +28,7 @@ class ReceiptDetailsController < ApplicationController
   end
 
   def summary_by_item_type
-    @books = Book.order(:id)
-    @current_book = Book.current
     scope = ReceiptDetail
-    @selected_book_id = params.key?(:book_id) ? params[:book_id].presence : @current_book&.id
     @selected_item_type = params[:item_type].presence
     scope = scope.joins(:receipt).where(receipts: { book_id: @selected_book_id }) if @selected_book_id.present?
     scope = scope.where(item_type: @selected_item_type) if @selected_item_type.present?
@@ -48,7 +40,7 @@ class ReceiptDetailsController < ApplicationController
         item_type,
         SUM(count) AS total_count,
         SUM(sum_value) AS total_value,
-        SUM(refund) AS total_refund,
+        MAX(refund) AS refund,
         SUM(sum_refund) AS total_sum_refund,
         SUM(sum_payment) AS total_sum_payment
       SQL
@@ -171,7 +163,7 @@ class ReceiptDetailsController < ApplicationController
     end
 
     def summary_by_type_sort_column
-      %w[item_code item_name total_count total_value total_refund total_sum_refund total_sum_payment].include?(params[:sort]) ? params[:sort] : "item_code"
+      %w[item_code item_name total_count total_value refund total_sum_refund total_sum_payment].include?(params[:sort]) ? params[:sort] : "item_code"
     end
 
     def summary_by_type_sort_direction
@@ -180,5 +172,21 @@ class ReceiptDetailsController < ApplicationController
 
     def summary_by_type_order_clause
       "#{summary_by_type_sort_column} #{summary_by_type_sort_direction}"
+    end
+
+    def load_book_filters
+      @books = available_books
+      @current_book = @books.find_by(is_use: true)
+      @selected_book_id = selected_book_id_from_params(@books, @current_book&.id)
+    end
+
+    def available_books
+      Book.where(is_lock: false).order(:id)
+    end
+
+    def selected_book_id_from_params(books, fallback_id)
+      raw_id = params.key?(:book_id) ? params[:book_id].presence : fallback_id
+      return unless raw_id.present?
+      books.exists?(id: raw_id) ? raw_id : nil
     end
 end
