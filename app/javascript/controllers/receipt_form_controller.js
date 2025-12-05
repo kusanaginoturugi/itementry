@@ -23,6 +23,8 @@ export default class extends Controller {
   ]
 
   connect() {
+    this.previousLineCount = null
+    this.previousTotalValue = null
     this.applyInitialValueLocks()
     this.restoreItemTypeFilter()
     this.recalculate()
@@ -96,6 +98,11 @@ export default class extends Controller {
     if (this.hasTotalCountTarget) this.totalCountTarget.textContent = totalCount
     if (this.hasTotalValueTarget) this.totalValueTarget.textContent = totalValue.toLocaleString()
     if (this.hasLineCountTarget) this.lineCountTarget.textContent = lineCount
+
+    this.flashOnChange(this.lineCountTarget, this.previousLineCount, lineCount)
+    this.flashOnChange(this.totalValueTarget, this.previousTotalValue, totalValue)
+    this.previousLineCount = lineCount
+    this.previousTotalValue = totalValue
   }
 
   filterItemsByType() {
@@ -205,5 +212,16 @@ export default class extends Controller {
     scope.querySelectorAll("[required]").forEach((el) => {
       el.removeAttribute("required")
     })
+  }
+
+  flashOnChange(target, previousValue, newValue) {
+    if (!target) return
+    if (previousValue === null || previousValue === undefined) return
+    if (previousValue === newValue) return
+    target.classList.remove("flash-highlight")
+    // force reflow to restart animation
+    // eslint-disable-next-line no-unused-expressions
+    target.offsetWidth
+    target.classList.add("flash-highlight")
   }
 }
