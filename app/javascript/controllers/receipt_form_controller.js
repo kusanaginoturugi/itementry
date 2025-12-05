@@ -169,7 +169,6 @@ export default class extends Controller {
       if (idField) idField.value = data.id || ""
       if (valueField && data.value !== undefined && data.value !== null) valueField.value = data.value
       this.toggleValueField(valueField, data.is_variable_value)
-      if (data.is_variable_value && valueField) valueField.focus()
       if (codeHidden) codeHidden.value = data.item_code || ""
     } catch (e) {
       resetFields()
