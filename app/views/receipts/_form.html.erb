@@ -37,7 +37,10 @@
 
     <div class="d-flex justify-content-between align-items-center mb-2">
       <h2 class="h5 mb-0">レシート明細</h2>
-      <%= link_to "明細を追加", "#", class: "btn btn-outline-primary btn-sm", data: { action: "click->receipt-form#addDetail keydown.enter->receipt-form#addDetail" } %>
+      <div class="d-flex gap-2">
+        <%= link_to "商品コード一覧（別ウィンドウ）", codes_items_path, class: "btn btn-outline-secondary btn-sm", target: "_blank", rel: "noopener" %>
+        <%= link_to "明細を追加", "#", class: "btn btn-outline-primary btn-sm", data: { action: "click->receipt-form#addDetail keydown.enter->receipt-form#addDetail" } %>
+      </div>
     </div>
 
     <div data-receipt-form-target="details">
@@ -57,39 +60,6 @@
       <%= link_to "戻る", receipt.persisted? ? receipt : receipts_path, class: "btn btn-outline-secondary" %>
     </div>
 
-    <% if @items.present? %>
-      <div class="card mt-3">
-        <div class="card-header py-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
-          <span class="fw-semibold">商品コード一覧</span>
-          <div class="d-flex align-items-center gap-2">
-            <label for="item-type-filter" class="form-label mb-0 text-muted">商品種類</label>
-            <select id="item-type-filter"
-              class="form-select form-select-sm"
-              data-receipt-form-target="itemTypeFilter"
-              data-action="change->receipt-form#filterItemsByType">
-              <option value="">すべて</option>
-              <% item_type_options.each do |label, value| %>
-                <option value="<%= value %>"><%= label %></option>
-              <% end %>
-            </select>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="row g-2">
-            <% @items.each do |item| %>
-              <div class="col-lg-2 col-md-3 col-sm-4" data-receipt-form-target="itemCard" data-item-type="<%= item.item_type %>">
-                <div class="border rounded p-2 h-100" style="background-color: <%= item_code_tone(item.item_code) %>;">
-                  <div class="d-flex justify-content-between align-items-start mb-1">
-                    <div class="text-monospace fw-bold"><%= item.item_code %></div>
-                    <div class="text-muted ms-2"><%= number_with_delimiter(item.value) %> 円</div>
-                  </div>
-                  <div class="small fw-semibold text-truncate"><%= item.name %></div>
-                </div>
-              </div>
-            <% end %>
-          </div>
-        </div>
-      </div>
-    <% end %>
+    <%= render "items/item_cards", with_receipt_form_targets: true if @items.present? %>
   </div>
 <% end %>

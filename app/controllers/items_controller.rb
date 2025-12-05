@@ -1,10 +1,15 @@
 class ItemsController < ApplicationController
+  layout "plain", only: :codes
   before_action :set_item, only: %i[ show edit update destroy ]
   helper_method :current_sort_column, :current_sort_direction, :toggle_direction_for
 
   # GET /items or /items.json
   def index
     @items = Item.order(order_clause)
+  end
+
+  def codes
+    @items = Item.order(:item_code)
   end
 
   # GET /items/1 or /items/1.json

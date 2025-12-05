@@ -1,0 +1,46 @@
+<% with_receipt_form_targets = local_assigns.fetch(:with_receipt_form_targets, false) %>
+<% use_item_filter_controller = local_assigns.fetch(:use_item_filter_controller, false) %>
+
+<% wrapper_data = {} %>
+<% wrapper_data[:controller] = "item-filter" if use_item_filter_controller %>
+
+<%= content_tag :div, class: "card mt-3", data: wrapper_data do %>
+  <div class="card-header py-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <span class="fw-semibold">商品コード一覧</span>
+    <div class="d-flex align-items-center gap-2">
+      <label for="item-type-filter" class="form-label mb-0 text-muted">商品種類</label>
+      <% select_data = {} %>
+      <% if with_receipt_form_targets %>
+        <% select_data[:receipt_form_target] = "itemTypeFilter" %>
+        <% select_data[:action] = "change->receipt-form#filterItemsByType" %>
+      <% end %>
+      <% if use_item_filter_controller %>
+        <% select_data[:item_filter_target] = "filter" %>
+        <% select_data[:action] = [select_data[:action], "change->item-filter#filter"].compact.join(" ") %>
+      <% end %>
+      <%= select_tag :item_type_filter,
+            options_for_select([["すべて", ""]] + item_type_options),
+            id: "item-type-filter",
+            class: "form-select form-select-sm",
+            data: select_data %>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row g-2">
+      <% @items.each do |item| %>
+        <% card_data = { item_type: item.item_type } %>
+        <% card_data[:receipt_form_target] = "itemCard" if with_receipt_form_targets %>
+        <% card_data[:item_filter_target] = "card" if use_item_filter_controller %>
+        <%= tag.div class: "col-lg-2 col-md-3 col-sm-4", data: card_data do %>
+          <div class="border rounded p-2 h-100" style="background-color: <%= item_code_tone(item.item_code) %>;">
+            <div class="d-flex justify-content-between align-items-start mb-1">
+              <div class="text-monospace fw-bold"><%= item.item_code %></div>
+              <div class="text-muted ms-2"><%= number_with_delimiter(item.value) %> 円</div>
+            </div>
+            <div class="small fw-semibold text-truncate"><%= item.name %></div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+<% end %>

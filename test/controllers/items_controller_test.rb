@@ -37,6 +37,20 @@ class ItemsControllerTest < ActionDispatch::IntegrationTest
     assert_equal %w[えええ ううう あああ], names
   end
 
+  test "codes view shows item cards" do
+    get codes_items_url
+    assert_response :success
+
+    card_codes = css_select(".text-monospace.fw-bold").map { |node| node.text.strip }
+    assert_includes card_codes, items(:one).item_code
+
+    assert_select ".navbar", count: 0
+    assert_select "a", text: "レシート登録へ戻る", count: 0
+    assert_select "[data-controller='item-filter']", count: 1
+    assert_select "select[data-item-filter-target='filter']", count: 1
+    assert_select "[data-item-filter-target='card'][data-item-type='#{items(:one).item_type}']", minimum: 1
+  end
+
   test "should get new" do
     get new_item_url
     assert_response :success

@@ -115,6 +115,14 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "11", name_value
   end
 
+  test "new page has item list link in new window" do
+    get new_receipt_url
+    assert_response :success
+
+    link = css_select("a[href='#{codes_items_path}'][target='_blank']").first
+    assert_not_nil link
+  end
+
   test "new prepopulates next numeric name scoped to current book" do
     ReceiptDetail.delete_all
     Receipt.delete_all
