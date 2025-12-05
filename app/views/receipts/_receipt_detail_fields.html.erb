@@ -26,6 +26,7 @@
           step: 1,
           required: true,
           readonly: variable == false,
+          tabindex: variable == false ? -1 : nil,
           data: {
             receipt_form_target: "valueField",
             action: "input->receipt-form#recalculate",

@@ -169,6 +169,7 @@ export default class extends Controller {
       if (idField) idField.value = data.id || ""
       if (valueField && data.value !== undefined && data.value !== null) valueField.value = data.value
       this.toggleValueField(valueField, data.is_variable_value)
+      if (data.is_variable_value && valueField) valueField.focus()
       if (codeHidden) codeHidden.value = data.item_code || ""
     } catch (e) {
       resetFields()
@@ -193,6 +194,10 @@ export default class extends Controller {
     if (!field) return
     const variable = isVariable === undefined ? true : (isVariable === true || isVariable === "true")
     field.readOnly = !variable
+    field.tabIndex = variable ? 0 : -1
+    if (variable) {
+      field.removeAttribute("tabindex")
+    }
     field.classList.toggle("bg-light", !variable)
   }
 }

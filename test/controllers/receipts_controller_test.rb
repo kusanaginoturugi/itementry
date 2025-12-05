@@ -123,6 +123,26 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     assert_not_nil link
   end
 
+  test "edit form skips tab stop for fixed price items" do
+    receipt = Receipt.create!(name: "30")
+    receipt.receipt_details.create!(
+      item: items(:one),
+      item_code: items(:one).item_code,
+      item_name: items(:one).name,
+      item_type: 1,
+      count: 1,
+      value: items(:one).value,
+      sum_value: items(:one).value
+    )
+
+    get edit_receipt_url(receipt)
+    assert_response :success
+
+    fixed_price_field = css_select("input[data-receipt-form-target='valueField']").first
+    assert_equal "-1", fixed_price_field["tabindex"]
+    assert_equal "readonly", fixed_price_field["readonly"]
+  end
+
   test "new prepopulates next numeric name scoped to current book" do
     ReceiptDetail.delete_all
     Receipt.delete_all

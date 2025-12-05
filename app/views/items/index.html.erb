@@ -20,6 +20,9 @@
             <th scope="col" class="text-center">
               <%= link_to "商品種類", items_path(sort: "item_type", direction: toggle_direction_for("item_type")), class: "text-decoration-none" %>
             </th>
+            <th scope="col" class="text-center">
+              可変単価
+            </th>
             <th scope="col" class="text-end">
               <%= link_to "価格", items_path(sort: "value", direction: toggle_direction_for("value")), class: "text-decoration-none" %>
             </th>
@@ -36,6 +39,13 @@
               <td class="fw-semibold" style="<%= cell_style %>"><%= item.item_code %></td>
               <td class="fw-semibold" style="<%= cell_style %>"><%= item.name %></td>
               <td class="text-center" style="<%= cell_style %>"><%= item_type_label(item.item_type) %></td>
+              <td class="text-center" style="<%= cell_style %>">
+                <% if item.is_variable_value? %>
+                  <span class="badge bg-primary-subtle text-primary">可変</span>
+                <% else %>
+                  <span class="badge bg-secondary">固定</span>
+                <% end %>
+              </td>
               <td class="text-end" style="<%= cell_style %>"><%= number_with_delimiter(item.value) %></td>
               <td class="text-end" style="<%= cell_style %>"><%= number_with_delimiter(item.refund) %></td>
               <td class="text-end" style="<%= cell_style %>">
