@@ -56,6 +56,7 @@ export default class extends Controller {
 
     if (destroyField) {
       destroyField.value = "1"
+      this.removeRequiredAttributes(card)
       card.classList.add("d-none")
     } else {
       card.remove()
@@ -198,5 +199,11 @@ export default class extends Controller {
       field.removeAttribute("tabindex")
     }
     field.classList.toggle("bg-light", !variable)
+  }
+
+  removeRequiredAttributes(scope) {
+    scope.querySelectorAll("[required]").forEach((el) => {
+      el.removeAttribute("required")
+    })
   }
 }
