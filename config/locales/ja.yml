@@ -2,7 +2,7 @@ ja:
   activerecord:
     models:
       book: 帳票
-      item: 商品
+      item: 道具
       receipt: レシート
       receipt_detail: レシート明細
     attributes:
@@ -11,21 +11,21 @@ ja:
         is_lock: ロック中
         is_use: 使用中
       item:
-        name: 商品名
+        name: 道具名
         value: 価格
-        item_type: 商品種類
+        item_type: 道具種類
         refund: 還付金
       receipt:
         name: レシート名
         total_count: 点数合計
         total_value: 金額合計
       receipt_detail:
-        item: 商品
-        item_id: 商品ID
-        item_name: 商品名
+        item: 道具
+        item_id: 道具ID
+        item_name: 道具名
         count: 個数
         value: 単価
-        item_type: 商品種類
+        item_type: 道具種類
         refund: 還付金
         sum_value: 小計
         sum_refund: 還付金合計

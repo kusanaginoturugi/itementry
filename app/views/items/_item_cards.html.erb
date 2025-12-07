@@ -6,9 +6,9 @@
 
 <%= content_tag :div, class: "card mt-3", data: wrapper_data do %>
   <div class="card-header py-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
-    <span class="fw-semibold">商品コード一覧</span>
+    <span class="fw-semibold">道具コード一覧</span>
     <div class="d-flex align-items-center gap-2">
-      <label for="item-type-filter" class="form-label mb-0 text-muted">商品種類</label>
+      <label for="item-type-filter" class="form-label mb-0 text-muted">道具種類</label>
       <% select_data = {} %>
       <% if with_receipt_form_targets %>
         <% select_data[:receipt_form_target] = "itemTypeFilter" %>

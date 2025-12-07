@@ -1,4 +1,4 @@
-<% content_for :title, "商品種類別明細集計" %>
+<% content_for :title, "道具種類別明細集計" %>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
   <% type_label = @selected_item_type.present? ? item_type_label(@selected_item_type) : nil %>
@@ -20,7 +20,7 @@
                 class: "form-select form-select-sm" %>
         </div>
         <div class="d-flex align-items-center gap-2">
-          <%= f.label :item_type, "商品種類", class: "form-label mb-0 align-self-center" %>
+          <%= f.label :item_type, "道具種類", class: "form-label mb-0 align-self-center" %>
           <%= f.select :item_type,
                 options_for_select([["すべて", ""]] + item_type_options, params[:item_type].presence || @selected_item_type),
                 {},
@@ -62,10 +62,10 @@
       <thead class="table-light">
         <tr>
           <th scope="col">
-            <%= link_to "商品コード", summary_by_item_type_receipt_details_path(request.query_parameters.merge(sort: "item_code", direction: toggle_direction_for("item_code"))), class: "text-decoration-none" %>
+            <%= link_to "道具コード", summary_by_item_type_receipt_details_path(request.query_parameters.merge(sort: "item_code", direction: toggle_direction_for("item_code"))), class: "text-decoration-none" %>
           </th>
           <th scope="col">
-            <%= link_to "商品名", summary_by_item_type_receipt_details_path(request.query_parameters.merge(sort: "item_name", direction: toggle_direction_for("item_name"))), class: "text-decoration-none" %>
+            <%= link_to "道具名", summary_by_item_type_receipt_details_path(request.query_parameters.merge(sort: "item_name", direction: toggle_direction_for("item_name"))), class: "text-decoration-none" %>
           </th>
           <th scope="col" class="text-end">
             <%= link_to "合計個数", summary_by_item_type_receipt_details_path(request.query_parameters.merge(sort: "total_count", direction: toggle_direction_for("total_count"))), class: "text-decoration-none" %>

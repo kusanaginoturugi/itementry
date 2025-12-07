@@ -2,13 +2,13 @@
   <div class="card-body">
     <div class="row gy-2 align-items-end">
       <div class="col-md-2">
-        <%= f.label :item_code, "商品コード", class: "form-label" %>
+        <%= f.label :item_code, "道具コード", class: "form-label" %>
         <%= text_field_tag :item_code_display, f.object.item_code.presence || f.object.item&.item_code, class: "form-control", required: true, name: "", data: { receipt_form_target: "itemCodeField", action: "change->receipt-form#loadItemName input->receipt-form#recalculate" } %>
         <%= f.hidden_field :item_code, data: { receipt_form_target: "itemCodeHidden" } %>
         <%= f.hidden_field :item_id, data: { receipt_form_target: "itemIdField" } %>
       </div>
       <div class="col-md-3">
-        <%= f.label :item_name, "商品名", class: "form-label" %>
+        <%= f.label :item_name, "道具名", class: "form-label" %>
         <% display_name = f.object.item_name.presence || f.object.item&.name || "-" %>
         <p class="form-control-plaintext mb-0" data-receipt-form-target="itemName"><%= display_name %></p>
         <%= f.hidden_field :item_name, data: { receipt_form_target: "itemNameField" } %>

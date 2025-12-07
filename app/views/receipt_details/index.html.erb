@@ -24,10 +24,10 @@
               <%= link_to "レシート名", receipt_details_path(request.query_parameters.merge(sort: "receipt_name", direction: toggle_direction_for("receipt_name"))), class: "text-decoration-none" %>
             </th>
             <th scope="col">
-              <%= link_to "商品コード", receipt_details_path(request.query_parameters.merge(sort: "item_code", direction: toggle_direction_for("item_code"))), class: "text-decoration-none" %>
+              <%= link_to "道具コード", receipt_details_path(request.query_parameters.merge(sort: "item_code", direction: toggle_direction_for("item_code"))), class: "text-decoration-none" %>
             </th>
             <th scope="col">
-              <%= link_to "商品名", receipt_details_path(request.query_parameters.merge(sort: "item_name", direction: toggle_direction_for("item_name"))), class: "text-decoration-none" %>
+              <%= link_to "道具名", receipt_details_path(request.query_parameters.merge(sort: "item_name", direction: toggle_direction_for("item_name"))), class: "text-decoration-none" %>
             </th>
             <th scope="col" class="text-end">
               <%= link_to "個数", receipt_details_path(request.query_parameters.merge(sort: "count", direction: toggle_direction_for("count"))), class: "text-decoration-none" %>

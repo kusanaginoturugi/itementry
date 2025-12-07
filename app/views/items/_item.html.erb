@@ -1,14 +1,14 @@
 <div id="<%= dom_id item %>" class="card shadow-sm">
   <div class="card-body">
-    <p class="text-muted mb-1">商品コード</p>
+    <p class="text-muted mb-1">道具コード</p>
     <p class="h6 mb-3"><%= item.item_code %></p>
 
-    <p class="text-muted mb-1">商品名</p>
+    <p class="text-muted mb-1">道具名</p>
     <h2 class="h5 mb-3"><%= item.name %></h2>
 
     <div class="row mb-3">
       <div class="col-6">
-        <p class="text-muted mb-1">商品種類</p>
+        <p class="text-muted mb-1">道具種類</p>
         <p class="h6 mb-0"><%= item_type_label(item.item_type) %></p>
       </div>
       <div class="col-6">
