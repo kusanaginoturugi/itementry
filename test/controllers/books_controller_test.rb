@@ -55,4 +55,16 @@ class BooksControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to books_url
   end
+
+  test "should not destroy book when receipts exist" do
+    book_with_receipt = books(:public_book)
+    Receipt.create!(name: "10", book: book_with_receipt)
+
+    assert_no_difference("Book.count") do
+      delete book_url(book_with_receipt)
+    end
+
+    assert_redirected_to books_url
+    assert_equal "レシートが存在するので、帳票の削除は許可できません", flash[:alert]
+  end
 end

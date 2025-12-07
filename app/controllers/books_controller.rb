@@ -52,11 +52,15 @@ class BooksController < ApplicationController
 
   # DELETE /books/1 or /books/1.json
   def destroy
-    @book.destroy!
-
     respond_to do |format|
-      format.html { redirect_to books_path, notice: "帳票を削除しました。", status: :see_other }
-      format.json { head :no_content }
+      begin
+        @book.destroy!
+        format.html { redirect_to books_path, notice: "帳票を削除しました。", status: :see_other }
+        format.json { head :no_content }
+      rescue ActiveRecord::DeleteRestrictionError, ActiveRecord::RecordNotDestroyed
+        format.html { redirect_to books_path, alert: "レシートが存在するので、帳票の削除は許可できません", status: :see_other }
+        format.json { render json: { error: "cannot delete book with receipts" }, status: :unprocessable_entity }
+      end
     end
   end
 
