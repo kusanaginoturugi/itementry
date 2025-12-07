@@ -58,6 +58,12 @@ class ReceiptDetailsController < ApplicationController
                encoding: "UTF-8",
                show_as_html: Rails.env.test?
       end
+      format.csv do
+        safe_label = helpers.item_type_label(@selected_item_type).presence || "all"
+        timestamp = Time.zone.now.strftime('%Y%m%d%H%M%S')
+        filename = "receipt_details_by_item_type-#{safe_label}-#{timestamp}.csv"
+        send_data build_csv_by_item_type(@summaries), filename: filename
+      end
     end
   end
 
@@ -188,5 +194,21 @@ class ReceiptDetailsController < ApplicationController
       raw_id = params.key?(:book_id) ? params[:book_id].presence : fallback_id
       return unless raw_id.present?
       books.exists?(id: raw_id) ? raw_id : nil
+    end
+
+    def build_csv_by_item_type(rows)
+      header = %w[item_code item_name total_count total_value refund total_sum_refund total_sum_payment]
+      body = rows.map do |row|
+        [
+          row.item_code,
+          row.item_name,
+          row.total_count,
+          row.total_value,
+          row.refund,
+          row.total_sum_refund,
+          row.total_sum_payment
+        ].map { |val| %("#{val.to_s.gsub('"', '""')}") }.join(",")
+      end
+      ([header.join(",")] + body).join("\n") + "\n"
     end
 end
