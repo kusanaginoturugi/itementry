@@ -92,6 +92,14 @@
               <dd class="col-sm-8"><%= Rails.env %></dd>
               <dt class="col-sm-4">Git</dt>
               <dd class="col-sm-8"><%= ENV["APP_VERSION"] || ENV["HEROKU_SLUG_COMMIT"] || ENV["GIT_REV"] || `git rev-parse --short HEAD`.chomp %></dd>
+              <dt class="col-sm-4">リポジトリ</dt>
+              <dd class="col-sm-8">
+                <%= link_to "github.com/kusanaginoturugi/itementry",
+                  "https://github.com/kusanaginoturugi/itementry",
+                  target: "_blank",
+                  rel: "noopener",
+                  class: "link-primary" %>
+              </dd>
             </dl>
           </div>
           <div class="modal-footer">
