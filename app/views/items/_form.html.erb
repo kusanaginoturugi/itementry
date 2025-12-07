@@ -1,4 +1,4 @@
-<%= form_with(model: item, class: "card shadow-sm") do |form| %>
+<%= form_with(model: item, class: "card shadow-sm", data: { controller: "item-form" }) do |form| %>
   <div class="card-body">
   <% if item.errors.any? %>
     <div class="alert alert-danger">
@@ -14,7 +14,10 @@
 
     <div class="mb-3">
       <%= form.label :item_code, "商品コード", class: "form-label" %>
-      <%= form.text_field :item_code, class: "form-control", required: true %>
+      <%= form.text_field :item_code,
+            class: "form-control",
+            required: true,
+            data: { item_form_target: "code", action: "input->item-form#syncType" } %>
     </div>
 
     <div class="mb-3">
@@ -24,7 +27,11 @@
 
     <div class="mb-3">
       <%= form.label :item_type, "商品種類", class: "form-label" %>
-      <%= form.select :item_type, options_for_select(item_type_options, form.object.item_type), {}, class: "form-select" %>
+      <%= form.select :item_type,
+            options_for_select(item_type_options, form.object.item_type),
+            {},
+            class: "form-select",
+            data: { item_form_target: "type" } %>
     </div>
 
     <div class="mb-3">
