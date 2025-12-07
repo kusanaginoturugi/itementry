@@ -12,12 +12,22 @@
     </div>
   <% end %>
 
-    <div class="mb-3">
-      <%= form.label :item_code, "商品コード", class: "form-label" %>
-      <%= form.text_field :item_code,
-            class: "form-control",
-            required: true,
-            data: { item_form_target: "code", action: "input->item-form#syncType" } %>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <%= form.label :item_code, "商品コード", class: "form-label" %>
+        <%= form.text_field :item_code,
+              class: "form-control",
+              required: true,
+              data: { item_form_target: "code", action: "input->item-form#syncType" } %>
+      </div>
+      <div class="col-md-6">
+        <%= form.label :item_type, "商品種類", class: "form-label" %>
+        <%= form.select :item_type,
+              options_for_select(item_type_options, form.object.item_type),
+              {},
+              class: "form-select",
+              data: { item_form_target: "type" } %>
+      </div>
     </div>
 
     <div class="mb-3">
@@ -25,23 +35,15 @@
       <%= form.text_area :name, class: "form-control", rows: 2, required: true %>
     </div>
 
-    <div class="mb-3">
-      <%= form.label :item_type, "商品種類", class: "form-label" %>
-      <%= form.select :item_type,
-            options_for_select(item_type_options, form.object.item_type),
-            {},
-            class: "form-select",
-            data: { item_form_target: "type" } %>
-    </div>
-
-    <div class="mb-3">
-      <%= form.label :value, "価格", class: "form-label" %>
-      <%= form.number_field :value, class: "form-control", min: 0, step: 1, required: true %>
-    </div>
-
-    <div class="mb-3">
-      <%= form.label :refund, "還付金", class: "form-label" %>
-      <%= form.number_field :refund, class: "form-control", min: 0, step: 1, required: true %>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <%= form.label :value, "価格", class: "form-label" %>
+        <%= form.number_field :value, class: "form-control", min: 0, step: 1, required: true %>
+      </div>
+      <div class="col-md-6">
+        <%= form.label :refund, "還付金", class: "form-label" %>
+        <%= form.number_field :refund, class: "form-control", min: 0, step: 1, required: true %>
+      </div>
     </div>
 
     <div class="form-check form-switch mb-4">
