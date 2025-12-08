@@ -12,7 +12,7 @@
           data: { receipt_form_target: "itemCodeField", action: "input->receipt-form#handleCodeInput change->receipt-form#loadItemName" } %>
         <%= f.hidden_field :item_code, data: { receipt_form_target: "itemCodeHidden" } %>
         <%= f.hidden_field :item_id, data: { receipt_form_target: "itemIdField" } %>
-        <div class="small border rounded mt-2 suggestions-box" data-receipt-form-target="suggestions" style="max-height: 200px; overflow-y: auto;"></div>
+        <div class="small mt-2 suggestions-box d-flex flex-wrap gap-1" data-receipt-form-target="suggestions"></div>
       </div>
       <div class="col-md-3">
         <%= f.label :item_name, "道具名", class: "form-label" %>

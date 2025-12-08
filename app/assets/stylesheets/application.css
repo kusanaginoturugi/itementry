@@ -28,3 +28,15 @@
   0%   { background-color: rgba(255, 243, 205, 0.8); }
   100% { background-color: transparent; }
 }
+
+.suggestions-box {
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.suggestion-row {
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: #fff;
+  min-width: 180px;
+}

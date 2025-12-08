@@ -244,7 +244,7 @@ export default class extends Controller {
     const matched = this.items.filter((item) => item.code.startsWith(prefix)).slice(0, 8)
     matched.forEach((item) => {
       const row = document.createElement("div")
-      row.className = "suggestion-row d-flex justify-content-between align-items-center py-1 px-2 border-bottom"
+      row.className = "suggestion-row d-flex justify-content-between align-items-center py-1 px-2"
       row.innerHTML = `
         <span class="text-monospace fw-bold">${item.code}</span>
         <span class="flex-grow-1 mx-2 text-truncate">${item.name}</span>
