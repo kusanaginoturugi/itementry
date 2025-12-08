@@ -43,6 +43,12 @@
       </div>
     </div>
 
+    <% if @items.present? %>
+      <div class="mb-3">
+        <%= render "items/item_cards", with_receipt_form_targets: true %>
+      </div>
+    <% end %>
+
     <div data-receipt-form-target="details">
       <%= form.fields_for :receipt_details do |detail_form| %>
         <%= render "receipt_detail_fields", f: detail_form %>
@@ -60,6 +66,5 @@
       <%= link_to "戻る", receipt.persisted? ? receipt : receipts_path, class: "btn btn-outline-secondary" %>
     </div>
 
-    <%= render "items/item_cards", with_receipt_form_targets: true if @items.present? %>
   </div>
 <% end %>
