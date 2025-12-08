@@ -136,6 +136,14 @@ export default class extends Controller {
     }
   }
 
+  handleCodeInput(event) {
+    const input = event.target
+    const code = input.value || ""
+    const detail = input.closest("[data-receipt-form-target='detail']")
+    this.renderSuggestions(detail, code)
+    this.recalculate()
+  }
+
   async loadItemName(event) {
     const input = event.target
     const code = input.value?.trim()
@@ -184,7 +192,6 @@ export default class extends Controller {
       resetFields()
     }
 
-    this.renderSuggestions(detail, code)
     this.recalculate()
   }
 
