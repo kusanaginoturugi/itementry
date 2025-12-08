@@ -5,6 +5,29 @@ ja:
       item: 道具
       receipt: レシート
       receipt_detail: レシート明細
+    errors:
+      models:
+        item:
+          attributes:
+            item_code:
+              taken: "既存の番号が存在するため、保存できません"
+        receipt:
+          attributes:
+            name: レシート名
+            total_count: 点数合計
+            total_value: 金額合計
+        receipt_detail:
+          attributes:
+            item: 道具
+            item_id: 道具ID
+            item_name: 道具名
+            count: 個数
+            value: 単価
+            item_type: 道具種類
+            refund: 還付金
+            sum_value: 小計
+            sum_refund: 還付金合計
+            sum_payment: 支払合計
     attributes:
       book:
         title: 帳票名
@@ -15,27 +38,6 @@ ja:
         value: 価格
         item_type: 道具種類
         refund: 還付金
-  errors:
-    models:
-      item:
-        attributes:
-          item_code:
-            taken: "既存の番号が存在するため、保存できません"
-      receipt:
-        name: レシート名
-        total_count: 点数合計
-        total_value: 金額合計
-      receipt_detail:
-        item: 道具
-        item_id: 道具ID
-        item_name: 道具名
-        count: 個数
-        value: 単価
-        item_type: 道具種類
-        refund: 還付金
-        sum_value: 小計
-        sum_refund: 還付金合計
-        sum_payment: 支払合計
   helpers:
     submit:
       create: "%{model} を作成"
