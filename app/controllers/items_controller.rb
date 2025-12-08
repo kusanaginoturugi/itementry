@@ -40,9 +40,10 @@ class ItemsController < ApplicationController
 
     respond_to do |format|
       if @item.save
-        format.html { redirect_to @item, notice: "商品を登録しました。" }
+        format.html { redirect_to @item, notice: "道具を登録しました。" }
         format.json { render :show, status: :created, location: @item }
       else
+        flash.now[:alert] = duplication_alert(@item)
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @item.errors, status: :unprocessable_entity }
       end
@@ -99,5 +100,10 @@ class ItemsController < ApplicationController
     def toggle_direction_for(column)
       return 'asc' unless column == current_sort_column
       current_sort_direction == 'asc' ? 'desc' : 'asc'
+    end
+
+    def duplication_alert(item)
+      return unless item.errors[:item_code].any? { |m| m =~ /has already been taken|重複/ }
+      "既存の番号が存在するため、保存できません"
     end
 end
