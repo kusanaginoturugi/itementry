@@ -3,7 +3,13 @@
     <div class="row gy-2 align-items-end">
       <div class="col-md-2">
         <%= f.label :item_code, "道具コード", class: "form-label" %>
-        <%= text_field_tag :item_code_display, f.object.item_code.presence || f.object.item&.item_code, class: "form-control", required: true, name: "", data: { receipt_form_target: "itemCodeField", action: "input->receipt-form#handleCodeInput change->receipt-form#loadItemName" } %>
+        <%= text_field_tag :item_code_display,
+          f.object.item_code.presence || f.object.item&.item_code,
+          class: "form-control",
+          required: true,
+          name: "",
+          autocomplete: "off",
+          data: { receipt_form_target: "itemCodeField", action: "input->receipt-form#handleCodeInput change->receipt-form#loadItemName" } %>
         <%= f.hidden_field :item_code, data: { receipt_form_target: "itemCodeHidden" } %>
         <%= f.hidden_field :item_id, data: { receipt_form_target: "itemIdField" } %>
         <div class="small border rounded mt-2 suggestions-box" data-receipt-form-target="suggestions" style="max-height: 200px; overflow-y: auto;"></div>
