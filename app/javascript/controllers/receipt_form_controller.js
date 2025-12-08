@@ -16,6 +16,7 @@ export default class extends Controller {
     "sumField",
     "itemIdField",
     "itemCodeField",
+    "suggestions",
     "valueField",
     "itemCodeHidden",
     "itemTypeFilter",
@@ -25,6 +26,7 @@ export default class extends Controller {
   connect() {
     this.previousLineCount = null
     this.previousTotalValue = null
+    this.items = this.loadItemsFromDataset()
     this.applyInitialValueLocks()
     this.restoreItemTypeFilter()
     this.recalculate()
@@ -182,6 +184,7 @@ export default class extends Controller {
       resetFields()
     }
 
+    this.renderSuggestions(detail, code)
     this.recalculate()
   }
 
@@ -223,5 +226,34 @@ export default class extends Controller {
     // eslint-disable-next-line no-unused-expressions
     target.offsetWidth
     target.classList.add("flash-highlight")
+  }
+
+  renderSuggestions(detail, code) {
+    const list = detail?.querySelector("[data-receipt-form-target='suggestions']")
+    if (!list || !this.items) return
+    list.innerHTML = ""
+    const prefix = code?.trim() || ""
+    if (prefix === "") return
+    const matched = this.items.filter((item) => item.code.startsWith(prefix)).slice(0, 8)
+    matched.forEach((item) => {
+      const row = document.createElement("div")
+      row.className = "suggestion-row d-flex justify-content-between align-items-center py-1 px-2 border-bottom"
+      row.innerHTML = `
+        <span class="text-monospace fw-bold">${item.code}</span>
+        <span class="flex-grow-1 mx-2 text-truncate">${item.name}</span>
+        <span class="text-muted small">${Number(item.value).toLocaleString()} 円</span>
+      `
+      list.appendChild(row)
+    })
+  }
+
+  loadItemsFromDataset() {
+    const el = document.getElementById("receipt-items-data")
+    if (!el) return []
+    try {
+      return JSON.parse(el.dataset.items || "[]")
+    } catch (e) {
+      return []
+    }
   }
 }

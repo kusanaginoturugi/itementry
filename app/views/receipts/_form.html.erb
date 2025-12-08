@@ -1,4 +1,5 @@
 <%= form_with(model: receipt, class: "card shadow-sm", data: { controller: "receipt-form" }) do |form| %>
+  <div id="receipt-items-data" data-items="<%= @items.map { |i| { code: i.item_code, name: i.name, value: i.value, item_type: i.item_type } }.to_json %>"></div>
   <div class="card-body">
   <% if receipt.errors.any? %>
     <div class="alert alert-danger">
