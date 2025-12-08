@@ -9,6 +9,7 @@ namespace :receipt_details do
     ReceiptDetail.includes(:item).find_each do |detail|
       item = detail.item || Item.find_by(item_code: detail.item_code)
       next unless item
+      next if item.respond_to?(:is_variable_value) && item.is_variable_value
 
       detail.assign_attributes(
         item_id: item.id,
