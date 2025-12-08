@@ -15,8 +15,12 @@ ja:
         value: 価格
         item_type: 道具種類
         refund: 還付金
-        item_code:
-          taken: "既に使用されています"
+  errors:
+    models:
+      item:
+        attributes:
+          item_code:
+            taken: "既存の番号が存在するため、保存できません"
       receipt:
         name: レシート名
         total_count: 点数合計
