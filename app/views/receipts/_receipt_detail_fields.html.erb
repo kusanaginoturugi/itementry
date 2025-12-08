@@ -12,7 +12,6 @@
           data: { receipt_form_target: "itemCodeField", action: "input->receipt-form#handleCodeInput change->receipt-form#loadItemName" } %>
         <%= f.hidden_field :item_code, data: { receipt_form_target: "itemCodeHidden" } %>
         <%= f.hidden_field :item_id, data: { receipt_form_target: "itemIdField" } %>
-        <div class="small mt-2 suggestions-box d-flex flex-wrap gap-1" data-receipt-form-target="suggestions"></div>
       </div>
       <div class="col-md-3">
         <%= f.label :item_name, "道具名", class: "form-label" %>
@@ -50,6 +49,7 @@
         <%= link_to "削除", "#", class: "btn btn-outline-danger btn-sm", data: { action: "receipt-form#removeDetail" } %>
       </div>
     </div>
+    <div class="mt-2 suggestions-box d-flex flex-wrap gap-2" data-receipt-form-target="suggestions"></div>
     <%= f.hidden_field :_destroy, value: "0", data: { receipt_form_target: "destroyField" } %>
   </div>
 </div>
