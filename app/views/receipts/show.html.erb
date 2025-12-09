@@ -9,7 +9,10 @@
     <%= link_to "新規", new_receipt_path, class: "btn btn-outline-primary" %>
     <%= link_to "一覧へ戻る", receipts_path, class: "btn btn-outline-secondary" %>
     <%= link_to "編集", edit_receipt_path(@receipt), class: "btn btn-primary" %>
-    <%= button_to "削除", @receipt, method: :delete, form: { data: { turbo_confirm: "このレシートを削除しますか？" } }, class: "btn btn-danger" %>
+    <%= button_to "削除", @receipt,
+          method: :delete,
+          form: { data: { turbo_confirm: "このレシートを削除しますか？" }, class: "d-inline" },
+          class: "btn btn-danger" %>
   </div>
 </div>
 
