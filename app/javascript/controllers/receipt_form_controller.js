@@ -42,7 +42,15 @@ export default class extends Controller {
       el.name = el.name.replace("NEW_RECORD", newId)
       if (el.id) el.id = el.id.replace("NEW_RECORD", newId)
     })
-    this.detailsTarget.appendChild(content)
+    const triggerDetail = event.target.closest("[data-receipt-form-target='detail']")
+    const fragment = document.createDocumentFragment()
+    fragment.appendChild(content)
+
+    if (triggerDetail && triggerDetail.parentNode === this.detailsTarget) {
+      triggerDetail.after(fragment)
+    } else {
+      this.detailsTarget.appendChild(fragment)
+    }
 
     // focus the newly added item's code field
     const codeFields = this.detailsTarget.querySelectorAll("[data-receipt-form-target='itemCodeField']")
