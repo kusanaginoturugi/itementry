@@ -203,6 +203,16 @@ export default class extends Controller {
     this.recalculate()
   }
 
+  openNewItem(event) {
+    event.preventDefault()
+    const detail = event.target.closest("[data-receipt-form-target='detail']")
+    const codeField = detail?.querySelector("[data-receipt-form-target='itemCodeField']")
+    const code = codeField?.value?.trim()
+    const url = new URL("/items/new", window.location.origin)
+    if (code) url.searchParams.set("item[item_code]", code)
+    window.location.assign(url.toString())
+  }
+
   focusFirstCodeField() {
     const codeField = this.detailsTarget.querySelector("[data-receipt-form-target='itemCodeField']")
     if (codeField) codeField.focus()
