@@ -56,6 +56,13 @@ class ItemsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "new prepopulates item_code when passed" do
+    get new_item_url, params: { item: { item_code: "1234" } }
+    assert_response :success
+    code_input = css_select("input[name='item[item_code]']").first
+    assert_equal "1234", code_input[:value]
+  end
+
   test "should create item" do
     assert_difference("Item.count") do
       post items_url, params: { item: { name: "新商品", value: 123, item_code: "9998" } }

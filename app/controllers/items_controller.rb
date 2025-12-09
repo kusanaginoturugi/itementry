@@ -27,7 +27,7 @@ class ItemsController < ApplicationController
 
   # GET /items/new
   def new
-    @item = Item.new
+    @item = Item.new(prefill_item_params)
   end
 
   # GET /items/1/edit
@@ -82,6 +82,12 @@ class ItemsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def item_params
       params.expect(item: [ :name, :value, :item_code, :is_variable_value, :item_type, :refund ])
+    end
+
+    def prefill_item_params
+      params.fetch(:item, {}).permit(:item_code)
+    rescue ActionController::ParameterMissing
+      {}
     end
 
     def order_clause
