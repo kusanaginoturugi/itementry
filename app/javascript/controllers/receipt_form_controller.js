@@ -249,7 +249,7 @@ export default class extends Controller {
     list.innerHTML = ""
     const prefix = code?.trim() || ""
     if (prefix === "") return
-    const matched = this.items.filter((item) => item.code.startsWith(prefix)).slice(0, 8)
+    const matched = this.items.filter((item) => item.code.startsWith(prefix)).slice(0, 10)
     matched.forEach((item) => {
       const row = document.createElement("div")
       row.className = "suggestion-row d-flex justify-content-between align-items-center py-1 px-2"
