@@ -6,6 +6,7 @@ export default class extends Controller {
 
   connect() {
     this.focusCodeField()
+    this.focusNameIfPrefilledCode()
   }
 
   syncType() {
@@ -21,5 +22,13 @@ export default class extends Controller {
     if (this.hasCodeTarget) {
       this.codeTarget.focus()
     }
+  }
+
+  focusNameIfPrefilledCode() {
+    if (!this.hasCodeTarget || !this.hasTypeTarget) return
+    const code = this.codeTarget.value?.trim()
+    if (!code) return
+    const nameField = document.querySelector("textarea[name='item[name]']")
+    if (nameField) nameField.focus()
   }
 }
