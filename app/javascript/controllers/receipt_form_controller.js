@@ -212,7 +212,7 @@ export default class extends Controller {
     const code = codeField?.value?.trim()
     const url = new URL("/items/new", window.location.origin)
     if (code) url.searchParams.set("item[item_code]", code)
-    window.location.assign(url.toString())
+    window.open(url.toString(), "_blank", "noopener")
   }
 
   focusFirstCodeField() {

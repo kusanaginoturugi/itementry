@@ -4,7 +4,7 @@
       <div class="col-md-2">
         <div class="d-flex align-items-center justify-content-between">
           <%= f.label :item_code, "道具コード", class: "form-label mb-0" %>
-          <%= link_to "道具追加", "#", class: "btn btn-outline-secondary btn-sm", data: { action: "receipt-form#openNewItem" } %>
+          <%= link_to "道具追加", "#", class: "btn btn-outline-secondary btn-sm", data: { action: "receipt-form#openNewItem" }, target: "_blank", rel: "noopener" %>
         </div>
         <%= text_field_tag :item_code_display,
           f.object.item_code.presence || f.object.item&.item_code,
