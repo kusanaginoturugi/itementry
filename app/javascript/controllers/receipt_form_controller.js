@@ -54,7 +54,9 @@ export default class extends Controller {
 
     // focus the newly added item's code field
     const codeFields = this.detailsTarget.querySelectorAll("[data-receipt-form-target='itemCodeField']")
-    const newCodeField = codeFields[codeFields.length - 1]
+    const newCodeField = triggerDetail
+      ? triggerDetail.nextElementSibling?.querySelector("[data-receipt-form-target='itemCodeField']")
+      : codeFields[codeFields.length - 1]
     if (newCodeField) newCodeField.focus()
 
     this.recalculate()
