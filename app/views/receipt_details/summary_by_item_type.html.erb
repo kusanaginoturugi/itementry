@@ -4,9 +4,9 @@
   <% type_label = @selected_item_type.present? ? item_type_label(@selected_item_type) : nil %>
   <h1 class="h4 mb-0">
     <% if type_label == "" %>
-      レシート明細集計(すべて）
+      道具種類別明細集計(すべて）
     <% else %>
-      レシート明細集計<%= "(#{type_label})" if type_label.present? %>
+      道具種類別明細集計<%= "(#{type_label})" if type_label.present? %>
     <% end %>
   </h1>
   <div class="btn-group">

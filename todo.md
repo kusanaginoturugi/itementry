@@ -77,3 +77,74 @@
   - ダンプ方式の方が壊れにくく、SQLiteバージョン差にも強いです。
   - キャッシュ/セッション用の SQLite（例: production_cache.sqlite3）は通常コピー不要です。
 
+
+
+レシートプリンタ
+
+これは欲しい
+TM-m30III-H
+HTTP通信によるXML印刷機能（ePOS-Print）に対応
+https://item.rakuten.co.jp/fksystem/tm-m303-h/
+
+ドロア付きのプリンタもあった。値段かわらねえ
+https://item.rakuten.co.jp/smaregi/a001-10401/
+
+安くてたぶん使えそう
+ESC/POS
+https://item.rakuten.co.jp/tsurunooshiro/rmdy02/
+
+
+
+ Webアプリからレシートプリンタにレシートの印刷とかできる？
+
+
+• I'm summarizing key approaches: use print-friendly HTML with window.print for basic needs; for ESC/POS, generate prints
+  server-side (e.g., ruby-escpos) and send via CUPS or network port; use WebUSB/WebSerial on Chrome with user permission for
+  direct browser printing; Web Bluetooth is less reliable. These cover typical browser-to-receipt printer workflows.
+
+─ Worked for 17s ───────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 可能です。ただしブラウザだけで直接レシートプリンタを制御するのは制約が多いので、実現方法を用途別にまとめます。
+
+  ### 1) シンプルに「印刷ダイアログ経由」で出す方法
+
+  - Railsで印刷用HTMLを用意し、<link media="print"> と印刷専用CSS（幅58/80mm、余白0、背景オフ）を作成。
+  - 画面で window.print() を呼ぶ（「印刷」ボタン）。
+      - 利点: ブラウザ標準で簡単。
+      - 注意: ユーザーがプリンタを手動選択。ESC/POSコマンドは使えない。
+
+  ### 2) サーバーからレシートプリンタへ直接送る方法（ESC/POS）
+
+  - レシートプリンタがLAN/USBでサーバにつながっている場合、Ruby の escpos / escpos-printer gem などで ESC/POS コマンドを生
+    成し、
+      - LANプリンタ: socket.print で 9100/TCP に送信
+      - USBプリンタ: CUPS 経由で Raw キューに送信（lp -d printer_name -o raw file.escpos）
+  - Rails側で「印刷」APIを用意し、ジョブをサーバーで実行。
+      - 利点: ダイアログなし、レイアウトが安定。
+      - 注意: プリンタをサーバー側に常時接続する運用が必要。
+
+  ### 3) ブラウザから直接デバイスに送る方法（実験的）
+
+  - Chrome限定で WebUSB / WebSerial / WebHID を使い、プリンタが対応していればブラウザから ESC/POS を送る。
+      - 要求: HTTPS配信、ユーザーが毎回デバイス許可、ブラウザ・OS・プリンタの相性チェックが必要。
+      - 小規模・クローズド環境なら現実的だが、運用ハードルは高め。
+
+  ### 4) ベンダーのクラウドプリントSDK
+
+  - 一部のレシートプリンタ（EPSON ePOS SDK 等）はクラウド／ローカルSDKを提供。JSでプリンタサービスに送信して印刷。
+      - 利点: 対応プリンタなら実績あり。
+      - 注意: ベンダー依存・設定がやや重い。
+
+  ———
+
+  おすすめの始め方（運用容易さ順）
+
+  1. まずは「印刷専用HTML + CSS + window.print()」で見た目を整える。
+  2. 無人印刷・自動印刷が必要になったら、サーバー側で ESC/POS を吐いてプリンタに直接送る方式を検討（LANプリンタ + Rawキュー
+     が簡単）。
+  3. 店舗PCから直接出したいが自動化もしたい場合は、ローカル常駐の小さな「印刷エージェント」（Ruby/Node/Go）を作り、Webからは
+     HTTPでそのエージェントに印刷ジョブを投げる構成が安定します。
+
+  用途や設置環境（サーバーとプリンタの接続形態、ブラウザ種、セキュリティポリシー）を教えてもらえれば、もう少し具体的な手順を
+  提案できます。
+
