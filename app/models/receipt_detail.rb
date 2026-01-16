@@ -3,6 +3,7 @@ class ReceiptDetail < ApplicationRecord
   belongs_to :item
 
   before_validation :apply_item_value
+  before_validation :assign_item_type_from_code
   before_validation :calculate_sum_value
 
   validates :item_code, :item_name, :count, :value, :sum_value, presence: true
@@ -18,6 +19,14 @@ class ReceiptDetail < ApplicationRecord
     return if item.is_variable_value
 
     self.value = item.value
+  end
+
+  def assign_item_type_from_code
+    return unless respond_to?(:item_type)
+    first = item_code.to_s.strip[0]
+    return unless first&.match?(/\d/)
+
+    self.item_type = first.to_i
   end
 
   def calculate_sum_value
