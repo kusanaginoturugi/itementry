@@ -8,7 +8,7 @@ module ApplicationHelper
     5 => "太明星",
     6 => "加賀御神水",
     7 => "祈願会等",
-    8 => "挙行日"
+    8 => "挙行費"
   }.freeze
 
   def item_type_options
