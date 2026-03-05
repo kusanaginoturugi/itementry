@@ -18,13 +18,14 @@ namespace :items do
       name = row['name']&.strip
       value = row['value']&.strip
       refund = row['refund']&.strip
+      type = code[0..0]
 
-      if code.blank? || name.blank? || value.blank? || refund.blank?
+      if code.blank? || name.blank? || value.blank? || refund.blank? || type.blank?
         warn "Skipping row with missing fields: #{row.to_h.inspect}"
         next
       end
 
-      collection << { item_code: code, name: name, value: Integer(value, 10), refund: Integer(refund, 10) }
+      collection << { item_code: code, name: name, value: Integer(value, 10), refund: Integer(refund, 10), item_type: type }
     end
 
     Item.transaction do

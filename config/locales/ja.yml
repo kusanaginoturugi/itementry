@@ -6,6 +6,8 @@ ja:
       receipt: レシート
       receipt_detail: レシート明細
     errors:
+      messages:
+        record_invalid: "バリデーションに失敗しました: %{errors}"
       models:
         item:
           attributes:
@@ -34,6 +36,7 @@ ja:
         is_lock: ロック中
         is_use: 使用中
       item:
+        item_code: 道具コード
         name: 道具名
         value: 価格
         item_type: 道具種類
