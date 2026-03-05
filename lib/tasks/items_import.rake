@@ -2,12 +2,12 @@ require 'csv'
 
 namespace :items do
   desc 'Replace items table with the contents of db/items3.csv'
-  task import_items3: :environment do
-    csv_path = Rails.root.join('db', 'items3.csv')
+  task import_items: :environment do
+    csv_path = Rails.root.join('db', 'items.csv')
     abort "CSV not found: #{csv_path}" unless File.exist?(csv_path)
 
     rows = CSV.read(csv_path, headers: true)
-    required_headers = %w[code name value]
+    required_headers = %w[code name value refund]
     missing_headers = required_headers - rows.headers.to_a
     abort "CSV must have headers: #{required_headers.join(',')}" if missing_headers.any?
 
@@ -17,13 +17,14 @@ namespace :items do
       code = row['code']&.strip
       name = row['name']&.strip
       value = row['value']&.strip
+      refund = row['refund']&.strip
 
-      if code.blank? || name.blank? || value.blank?
+      if code.blank? || name.blank? || value.blank? || refund.blank?
         warn "Skipping row with missing fields: #{row.to_h.inspect}"
         next
       end
 
-      collection << { item_code: code, name: name, value: Integer(value, 10) }
+      collection << { item_code: code, name: name, value: Integer(value, 10), refund: Integer(refund, 10) }
     end
 
     Item.transaction do
