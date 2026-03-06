@@ -41,3 +41,6 @@
 
 # Ignore backup file
 *~
+
+# Local DB backup directory
+/dbbackup/

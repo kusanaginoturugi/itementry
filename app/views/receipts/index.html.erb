@@ -41,13 +41,17 @@
         </thead>
         <tbody>
           <% @receipts.each do |receipt| %>
-            <tr>
+            <tr
+              data-controller="receipt-list"
+              data-action="click->receipt-list#open keydown->receipt-list#openByKeyboard"
+              data-url="<%= receipt_path(receipt) %>"
+              tabindex="0"
+              style="cursor: pointer;">
               <td class="fw-semibold"><%= receipt.name.presence || "名称未設定" %></td>
               <td class="text-end"><%= @line_counts_by_receipt[receipt.id].to_i %></td>
               <td class="text-end"><%= number_with_delimiter(receipt.total_value) %></td>
               <td class="text-end">
                 <div class="d-inline-flex gap-1 flex-nowrap">
-                  <%= link_to "詳細", receipt, class: "btn btn-outline-secondary btn-sm" %>
                   <%= link_to "編集", edit_receipt_path(receipt), class: "btn btn-outline-primary btn-sm" %>
                   <%= button_to "削除", receipt, method: :delete, form: { data: { turbo_confirm: "このレシートを削除しますか？" }, class: "d-inline" }, class: "btn btn-outline-danger btn-sm" %>
                 </div>
