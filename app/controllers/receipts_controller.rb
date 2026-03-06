@@ -1,5 +1,6 @@
 class ReceiptsController < ApplicationController
   before_action :set_receipt, only: %i[ show edit update destroy ]
+  before_action :set_receipt_navigation, only: %i[ show ]
   before_action :set_items, only: %i[ new edit create update ]
   before_action :set_books, only: %i[ index new edit create update ]
   helper_method :sort_column, :sort_direction, :toggle_direction_for
@@ -131,5 +132,10 @@ class ReceiptsController < ApplicationController
       return unless raw_id.present?
 
       books.exists?(id: raw_id) ? raw_id : nil
+    end
+
+    def set_receipt_navigation
+      @previous_receipt = Receipt.where("id < ?", @receipt.id).order(id: :desc).first
+      @next_receipt = Receipt.where("id > ?", @receipt.id).order(id: :asc).first
     end
 end

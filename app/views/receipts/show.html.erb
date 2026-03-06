@@ -6,6 +6,16 @@
     <div class="text-muted">ID: <%= @receipt.id %></div>
   </div>
   <div class="btn-group">
+    <% if @previous_receipt.present? %>
+      <%= link_to "<", receipt_path(@previous_receipt), class: "btn btn-outline-secondary" %>
+    <% else %>
+      <button type="button" class="btn btn-outline-secondary" disabled>&lt;</button>
+    <% end %>
+    <% if @next_receipt.present? %>
+      <%= link_to ">", receipt_path(@next_receipt), class: "btn btn-outline-secondary" %>
+    <% else %>
+      <button type="button" class="btn btn-outline-secondary" disabled>&gt;</button>
+    <% end %>
     <%= link_to "新規", new_receipt_path, class: "btn btn-outline-primary" %>
     <%= link_to "一覧へ戻る", receipts_path, class: "btn btn-outline-secondary" %>
     <%= link_to "編集", edit_receipt_path(@receipt), class: "btn btn-primary" %>

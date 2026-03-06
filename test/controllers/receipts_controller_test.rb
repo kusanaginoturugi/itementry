@@ -335,6 +335,28 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     refute_includes response.body, "点数合計"
   end
 
+  test "show has next link and previous disabled on first receipt" do
+    first_receipt = Receipt.order(:id).first
+    second_receipt = Receipt.order(:id).second
+
+    get receipt_url(first_receipt)
+    assert_response :success
+
+    assert_select "a[href='#{receipt_path(second_receipt)}']", text: ">"
+    assert_select "button[disabled]", text: "<"
+  end
+
+  test "show has previous link and next disabled on last receipt" do
+    last_receipt = Receipt.order(:id).last
+    previous_receipt = Receipt.order(:id).reverse_order.second
+
+    get receipt_url(last_receipt)
+    assert_response :success
+
+    assert_select "a[href='#{receipt_path(previous_receipt)}']", text: "<"
+    assert_select "button[disabled]", text: ">"
+  end
+
   test "should get edit" do
     get edit_receipt_url(@receipt)
     assert_response :success
