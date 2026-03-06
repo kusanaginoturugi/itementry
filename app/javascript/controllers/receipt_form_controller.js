@@ -159,48 +159,27 @@ export default class extends Controller {
     const code = input.value?.trim()
     const detail = input.closest("[data-receipt-form-target='detail']")
     if (!detail) return
-    const nameField = detail.querySelector("[data-receipt-form-target='itemNameField']")
-    const nameDisplay = detail.querySelector("[data-receipt-form-target='itemName']")
-    const idField = detail.querySelector("[data-receipt-form-target='itemIdField']")
-    const valueField = detail.querySelector("[data-receipt-form-target='valueField']")
-    const codeHidden = detail.querySelector("[data-receipt-form-target='itemCodeHidden']")
+    await this.fillItemByCode(detail, code)
 
-    const resetFields = () => {
-      if (nameField) nameField.value = ""
-      if (nameDisplay) nameDisplay.textContent = "-"
-      if (idField) idField.value = ""
-      if (valueField) {
-        valueField.value = ""
-        this.toggleValueField(valueField, true)
-      }
-      if (codeHidden) codeHidden.value = ""
-    }
+    this.recalculate()
+  }
 
-    if (!code) {
-      resetFields()
-      this.recalculate()
-      return
-    }
+  async selectSuggestion(event) {
+    event.preventDefault()
+    const row = event.currentTarget
+    const code = row.dataset.code
+    const detail = row.closest("[data-receipt-form-target='detail']")
+    if (!detail || !code) return
 
-    // If fields are prefilled (edit page), avoid refetching same code
-    if (codeHidden?.value === code && (nameField?.value || nameDisplay?.textContent?.trim() !== "-")) {
-      this.recalculate()
-      return
-    }
+    const codeField = detail.querySelector("[data-receipt-form-target='itemCodeField']")
+    if (!codeField) return
 
-    try {
-      const response = await fetch(`/items/lookup.json?item_code=${encodeURIComponent(code)}`)
-      if (!response.ok) throw new Error("Not found")
-      const data = await response.json()
-      if (nameField) nameField.value = data.name || ""
-      if (nameDisplay) nameDisplay.textContent = data.name || "-"
-      if (idField) idField.value = data.id || ""
-      if (valueField && data.value !== undefined && data.value !== null) valueField.value = data.value
-      this.toggleValueField(valueField, data.is_variable_value)
-      if (codeHidden) codeHidden.value = data.item_code || ""
-    } catch (e) {
-      resetFields()
-    }
+    codeField.value = code
+    this.renderSuggestions(detail, "")
+    await this.fillItemByCode(detail, code)
+
+    const countField = detail.querySelector("input[name*='[count]']")
+    if (countField) countField.focus()
 
     this.recalculate()
   }
@@ -265,6 +244,10 @@ export default class extends Controller {
     matched.forEach((item) => {
       const row = document.createElement("div")
       row.className = "suggestion-row d-flex justify-content-between align-items-center py-1 px-2"
+      row.dataset.code = item.code
+      row.setAttribute("role", "button")
+      row.setAttribute("tabindex", "0")
+      row.setAttribute("data-action", "mousedown->receipt-form#selectSuggestion")
       row.innerHTML = `
         <span class="text-monospace fw-bold">${item.code}</span>
         <span class="flex-grow-1 mx-2 text-truncate">${item.name}</span>
@@ -272,6 +255,49 @@ export default class extends Controller {
       `
       list.appendChild(row)
     })
+  }
+
+  async fillItemByCode(detail, code) {
+    const nameField = detail.querySelector("[data-receipt-form-target='itemNameField']")
+    const nameDisplay = detail.querySelector("[data-receipt-form-target='itemName']")
+    const idField = detail.querySelector("[data-receipt-form-target='itemIdField']")
+    const valueField = detail.querySelector("[data-receipt-form-target='valueField']")
+    const codeHidden = detail.querySelector("[data-receipt-form-target='itemCodeHidden']")
+
+    const resetFields = () => {
+      if (nameField) nameField.value = ""
+      if (nameDisplay) nameDisplay.textContent = "-"
+      if (idField) idField.value = ""
+      if (valueField) {
+        valueField.value = ""
+        this.toggleValueField(valueField, true)
+      }
+      if (codeHidden) codeHidden.value = ""
+    }
+
+    if (!code) {
+      resetFields()
+      return
+    }
+
+    // If fields are prefilled (edit page), avoid refetching same code
+    if (codeHidden?.value === code && (nameField?.value || nameDisplay?.textContent?.trim() !== "-")) {
+      return
+    }
+
+    try {
+      const response = await fetch(`/items/lookup.json?item_code=${encodeURIComponent(code)}`)
+      if (!response.ok) throw new Error("Not found")
+      const data = await response.json()
+      if (nameField) nameField.value = data.name || ""
+      if (nameDisplay) nameDisplay.textContent = data.name || "-"
+      if (idField) idField.value = data.id || ""
+      if (valueField && data.value !== undefined && data.value !== null) valueField.value = data.value
+      this.toggleValueField(valueField, data.is_variable_value)
+      if (codeHidden) codeHidden.value = data.item_code || ""
+    } catch (e) {
+      resetFields()
+    }
   }
 
   loadItemsFromDataset() {

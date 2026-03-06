@@ -43,4 +43,5 @@
   background: #fff;
   min-width: 180px;
   flex: 1 1 220px;
+  cursor: pointer;
 }
