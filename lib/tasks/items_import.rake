@@ -1,9 +1,9 @@
-require 'csv'
+require "csv"
 
 namespace :items do
-  desc 'Replace items table with the contents of db/items3.csv'
+  desc "Replace items table with the contents of db/items.csv"
   task import_items: :environment do
-    csv_path = Rails.root.join('db', 'items.csv')
+    csv_path = Rails.root.join("db", "items.csv")
     abort "CSV not found: #{csv_path}" unless File.exist?(csv_path)
 
     rows = CSV.read(csv_path, headers: true)
@@ -14,10 +14,10 @@ namespace :items do
     items = rows.each_with_object([]) do |row, collection|
       next if row.to_h.values.all? { |value| value.to_s.strip.empty? }
 
-      code = row['code']&.strip
-      name = row['name']&.strip
-      value = row['value']&.strip
-      refund = row['refund']&.strip
+      code = row["code"]&.strip
+      name = row["name"]&.strip
+      value = row["value"]&.strip
+      refund = row["refund"]&.strip
       type = code[0..0]
 
       if code.blank? || name.blank? || value.blank? || refund.blank? || type.blank?

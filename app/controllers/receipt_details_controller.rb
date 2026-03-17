@@ -53,16 +53,16 @@ class ReceiptDetailsController < ApplicationController
         response.headers["Content-Type"] = "application/pdf" if Rails.env.test?
         render pdf: "receipt_details_by_item_type-#{Time.zone.now.strftime('%Y%m%d%H%M%S')}",
                template: "receipt_details/summary_by_item_type",
-               formats: [:html],
+               formats: [ :html ],
                layout: "application",
                encoding: "UTF-8",
                show_as_html: Rails.env.test?
       end
       format.csv do
         safe_label = helpers.item_type_label(@selected_item_type).presence || "all"
-        timestamp = Time.zone.now.strftime('%Y%m%d%H%M%S')
+        timestamp = Time.zone.now.strftime("%Y%m%d%H%M%S")
         filename = "receipt_details_by_item_type-#{safe_label}-#{timestamp}.csv"
-        send_data build_csv_by_item_type(@summaries), filename: filename
+        send_data build_csv_by_item_type(@summaries), filename: filename, disposition: :attachment
       end
     end
   end
@@ -141,11 +141,11 @@ class ReceiptDetailsController < ApplicationController
           row.total_payment
         ].map { |val| %("#{val.to_s.gsub('"', '""')}") }.join(",")
       end
-      ([header.join(",")] + body).join("\n") + "\n"
+      ([ header.join(",") ] + body).join("\n") + "\n"
     end
 
     def summary_sort_column
-      %w[item_code item_name total_count total_value].include?(params[:sort]) ? params[:sort] : 'item_code'
+      %w[item_code item_name total_count total_value].include?(params[:sort]) ? params[:sort] : "item_code"
     end
 
     def index_sort_column
@@ -161,7 +161,7 @@ class ReceiptDetailsController < ApplicationController
     end
 
     def summary_sort_direction
-      %w[asc desc].include?(params[:direction]) ? params[:direction] : 'asc'
+      %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
     end
 
     def summary_order_clause
@@ -209,6 +209,6 @@ class ReceiptDetailsController < ApplicationController
           row.total_sum_payment
         ].map { |val| %("#{val.to_s.gsub('"', '""')}") }.join(",")
       end
-      ([header.join(",")] + body).join("\n") + "\n"
+      ([ header.join(",") ] + body).join("\n") + "\n"
     end
 end

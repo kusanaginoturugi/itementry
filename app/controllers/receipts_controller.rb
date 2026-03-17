@@ -115,7 +115,7 @@ class ReceiptsController < ApplicationController
     def order_clause
       case sort_column
       when "line_count"
-        Arel.sql("COUNT(receipt_details.id) #{sort_direction}")
+        sort_direction == "asc" ? Arel.sql("COUNT(receipt_details.id) ASC") : Arel.sql("COUNT(receipt_details.id) DESC")
       when "total_value"
         { total_value: sort_direction }
       else

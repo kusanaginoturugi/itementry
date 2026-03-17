@@ -91,21 +91,21 @@ class ItemsController < ApplicationController
     end
 
     def order_clause
-      direction = current_sort_direction == 'desc' ? :desc : :asc
+      direction = current_sort_direction == "desc" ? :desc : :asc
       Item.arel_table[current_sort_column].send(direction)
     end
 
     def current_sort_column
-      %w[item_code name value item_type refund].include?(params[:sort]) ? params[:sort] : 'item_code'
+      %w[item_code name value item_type refund].include?(params[:sort]) ? params[:sort] : "item_code"
     end
 
     def current_sort_direction
-      %w[asc desc].include?(params[:direction]) ? params[:direction] : 'asc'
+      %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
     end
 
     def toggle_direction_for(column)
-      return 'asc' unless column == current_sort_column
-      current_sort_direction == 'asc' ? 'desc' : 'asc'
+      return "asc" unless column == current_sort_column
+      current_sort_direction == "asc" ? "desc" : "asc"
     end
 
     def duplication_alert(item)

@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   def toggle_direction_for(column)
     current_sort = params[:sort]
     current_direction = params[:direction]
-    return 'asc' unless current_sort == column
-    current_direction == 'asc' ? 'desc' : 'asc'
+    return "asc" unless current_sort == column
+    current_direction == "asc" ? "desc" : "asc"
   end
 end

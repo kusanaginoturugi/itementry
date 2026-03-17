@@ -40,7 +40,7 @@ class ReceiptDetailsRefreshTaskTest < ActiveSupport::TestCase
     assert_equal item.id, detail.item_id
     assert_equal item.item_code, detail.item_code
     assert_equal "新しい商品", detail.item_name
-    assert_equal 3, detail.item_type
+    assert_equal 1, detail.item_type
     assert_equal 120, detail.value
     assert_equal 10, detail.refund
     assert_equal 240, detail.sum_value

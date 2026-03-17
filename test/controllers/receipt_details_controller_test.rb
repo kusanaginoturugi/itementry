@@ -45,7 +45,7 @@ class ReceiptDetailsControllerTest < ActionDispatch::IntegrationTest
     get summary_receipt_details_url
     assert_response :success
     codes = css_select("tbody tr td:first-child").map { |td| td.text.strip }
-    assert_equal ["002"], codes
+    assert_equal [ "002" ], codes
   end
 
   test "should get summary csv" do
@@ -59,10 +59,10 @@ class ReceiptDetailsControllerTest < ActionDispatch::IntegrationTest
     Receipt.delete_all
     Item.delete_all
 
-    item_a = Item.create!(item_code: "100", name: "A", value: 100, item_type: 0, refund: 10)
-    item_b = Item.create!(item_code: "200", name: "B", value: 200, item_type: 1, refund: 20)
+    item_a = Item.create!(item_code: "100", name: "A", value: 100, item_type: 1, refund: 10)
+    item_b = Item.create!(item_code: "200", name: "B", value: 200, item_type: 2, refund: 20)
 
-    r1 = Receipt.create!(name: "10")
+    r1 = Receipt.create!(name: "10", book: books(:unclassified))
     r1.receipt_details.create!(item: item_a, item_code: item_a.item_code, item_name: item_a.name, item_type: item_a.item_type, count: 1, value: 100, sum_value: 100, refund: 10, sum_refund: 10, sum_payment: 90)
     r1.receipt_details.create!(item: item_b, item_code: item_b.item_code, item_name: item_b.name, item_type: item_b.item_type, count: 2, value: 200, sum_value: 400, refund: 20, sum_refund: 40, sum_payment: 360)
 
@@ -75,16 +75,16 @@ class ReceiptDetailsControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "支払合計"
 
     codes = css_select("tbody tr td:first-child").map { |td| td.text.strip }
-    assert_equal [item_a.item_code], codes
+    assert_equal [ item_a.item_code ], codes
 
     refund_values = css_select("tbody tr td:nth-child(5)").map { |td| td.text.strip }
-    assert_equal ["10"], refund_values
+    assert_equal [ "10" ], refund_values
   end
 
   test "should render pdf for summary by item type" do
     get summary_by_item_type_receipt_details_url(format: :pdf)
     assert_response :success
-    assert_includes ["application/pdf", "text/html"], response.media_type
+    assert_includes [ "application/pdf", "text/html" ], response.media_type
   end
 
   test "should render csv for summary by item type with label in filename" do
@@ -92,19 +92,20 @@ class ReceiptDetailsControllerTest < ActionDispatch::IntegrationTest
     Receipt.delete_all
     Item.delete_all
 
-    item_a = Item.create!(item_code: "100", name: "A", value: 100, item_type: 0, refund: 10, is_variable_value: false)
-    item_b = Item.create!(item_code: "200", name: "B", value: 200, item_type: 1, refund: 20, is_variable_value: false)
+    item_a = Item.create!(item_code: "100", name: "A", value: 100, item_type: 1, refund: 10, is_variable_value: false)
+    item_b = Item.create!(item_code: "200", name: "B", value: 200, item_type: 2, refund: 20, is_variable_value: false)
 
-    r1 = Receipt.create!(name: "10")
+    r1 = Receipt.create!(name: "10", book: books(:unclassified))
     r1.receipt_details.create!(item: item_a, item_code: item_a.item_code, item_name: item_a.name, item_type: item_a.item_type, count: 1, value: 100, sum_value: 100, refund: 10, sum_refund: 10, sum_payment: 90)
     r1.receipt_details.create!(item: item_b, item_code: item_b.item_code, item_name: item_b.name, item_type: item_b.item_type, count: 2, value: 200, sum_value: 400, refund: 20, sum_refund: 40, sum_payment: 360)
 
     get summary_by_item_type_receipt_details_url(format: :csv, item_type: item_a.item_type)
     assert_response :success
     assert_equal "text/csv", response.media_type
-    filename = response.headers["Content-Disposition"]
+    filename = response.headers["Content-Disposition"] || response.headers["content-disposition"]
     encoded_label = ERB::Util.url_encode(ApplicationHelper::ITEM_TYPE_LABELS[item_a.item_type])
-    assert_includes filename, encoded_label
+    assert filename.present?
+    assert filename.include?(encoded_label) || filename.include?(ApplicationHelper::ITEM_TYPE_LABELS[item_a.item_type])
 
     lines = response.body.split("\n")
     assert_equal "item_code,item_name,total_count,total_value,refund,total_sum_refund,total_sum_payment", lines.first

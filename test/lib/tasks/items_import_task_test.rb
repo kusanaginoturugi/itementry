@@ -1,9 +1,9 @@
-require 'test_helper'
-require 'rake'
-require 'csv'
+require "test_helper"
+require "rake"
+require "csv"
 
 class ItemsImportTaskTest < ActiveSupport::TestCase
-  TASK_NAME = 'items:import_items3'
+  TASK_NAME = "items:import_items"
 
   def setup
     Rails.application.load_tasks unless Rake::Task.task_defined?(TASK_NAME)
@@ -15,19 +15,19 @@ class ItemsImportTaskTest < ActiveSupport::TestCase
     clean_tables
   end
 
-  def test_replaces_items_table_with_db_items3_csv_contents
-    csv_path = Rails.root.join('db', 'items3.csv')
+  def test_replaces_items_table_with_db_items_csv_contents
+    csv_path = Rails.root.join("db", "items.csv")
     csv_rows = CSV.read(csv_path, headers: true)
     expected_rows = csv_rows.select do |row|
-      [row['code'], row['name'], row['value']].all? { |value| value.present? }
+      [ row["code"], row["name"], row["value"], row["refund"] ].all? { |value| value.present? }
     end
     expected_count = expected_rows.length
 
     Rake::Task[TASK_NAME].invoke
 
     assert_equal expected_count, Item.count
-    first_item = Item.find_by!(item_code: '001')
-    assert_equal '招財玉', first_item.name
+    first_item = Item.find_by!(item_code: "000010")
+    assert_equal "招財玉", first_item.name
     assert_equal 10, first_item.value
   end
 
