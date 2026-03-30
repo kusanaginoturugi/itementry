@@ -23,6 +23,26 @@ class ReceiptDetailsControllerTest < ActionDispatch::IntegrationTest
     refute_includes option_values, books(:locked_book).id.to_s
   end
 
+  test "index can filter by item_name" do
+    ReceiptDetail.delete_all
+    Receipt.delete_all
+    Item.delete_all
+
+    hammer = Item.create!(item_code: "100", name: "金槌", value: 100, item_type: 1, refund: 10, is_variable_value: false)
+    saw = Item.create!(item_code: "200", name: "のこぎり", value: 200, item_type: 2, refund: 20, is_variable_value: false)
+
+    receipt = Receipt.create!(name: "10", book: books(:unclassified))
+    receipt.receipt_details.create!(item: hammer, item_code: hammer.item_code, item_name: hammer.name, count: 1, value: 100, sum_value: 100)
+    receipt.receipt_details.create!(item: saw, item_code: saw.item_code, item_name: saw.name, count: 1, value: 200, sum_value: 200)
+
+    get receipt_details_url(item_name: "金")
+    assert_response :success
+
+    assert_select "input[name='item_name'][value='金']"
+    names = css_select("tbody tr td:nth-child(3)").map { |td| td.text.strip }
+    assert_equal [ "金槌" ], names
+  end
+
   test "summary can sort by total_value desc" do
     get summary_receipt_details_url(sort: "total_value", direction: "desc")
     assert_response :success

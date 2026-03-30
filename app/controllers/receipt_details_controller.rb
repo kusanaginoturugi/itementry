@@ -4,7 +4,12 @@ class ReceiptDetailsController < ApplicationController
 
   # GET /receipt_details or /receipt_details.json
   def index
+    @selected_item_name = params[:item_name].to_s.strip.presence
     scoped = @selected_book_id.present? ? ReceiptDetail.joins(:receipt).where(receipts: { book_id: @selected_book_id }) : ReceiptDetail.all
+    if @selected_item_name.present?
+      escaped_item_name = ActiveRecord::Base.sanitize_sql_like(@selected_item_name)
+      scoped = scoped.where("receipt_details.item_name LIKE ?", "%#{escaped_item_name}%")
+    end
     @receipt_details = scoped
       .joins(:receipt)
       .select("receipt_details.*, receipts.name AS receipt_name")
