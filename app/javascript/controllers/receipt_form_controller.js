@@ -258,6 +258,10 @@ export default class extends Controller {
       `
       list.appendChild(row)
     })
+
+    if (matched.length > 0) {
+      this.ensureSuggestionsVisible(list)
+    }
   }
 
   async fillItemByCode(detail, code) {
@@ -311,5 +315,18 @@ export default class extends Controller {
     } catch (e) {
       return []
     }
+  }
+
+  ensureSuggestionsVisible(list) {
+    requestAnimationFrame(() => {
+      const rect = list.getBoundingClientRect()
+      const viewportBottom = window.innerHeight || document.documentElement.clientHeight
+      const bottomGap = 16
+
+      if (rect.bottom <= viewportBottom - bottomGap) return
+
+      const overflow = rect.bottom - viewportBottom + bottomGap
+      window.scrollBy({ top: overflow, behavior: "smooth" })
+    })
   }
 }
