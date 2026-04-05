@@ -5,20 +5,20 @@
   <div class="overflow-auto">
     <%= form_with url: receipt_details_path, method: :get, local: true, class: "d-flex gap-3 flex-nowrap align-items-end" do |f| %>
       <div class="flex-shrink-0">
-        <%= f.label :book_id, "帳票", class: "form-label mb-1 text-nowrap" %>
-        <%= f.select :book_id,
-              options_from_collection_for_select(@books, :id, :title, params.key?(:book_id) ? params[:book_id] : @selected_book_id),
-              { include_blank: "すべて" },
-              class: "form-select form-select-sm",
-              style: "min-width: 16rem;" %>
-      </div>
-      <div class="flex-shrink-0">
         <%= f.label :item_name, "道具名", class: "form-label mb-1 text-nowrap" %>
         <%= f.search_field :item_name,
               value: @selected_item_name,
               placeholder: "部分一致",
               class: "form-control form-control-sm",
               style: "min-width: 14rem;" %>
+      </div>
+      <div class="flex-shrink-0">
+        <%= f.label :book_id, "帳票", class: "form-label mb-1 text-nowrap" %>
+        <%= f.select :book_id,
+              options_from_collection_for_select(@books, :id, :title, params.key?(:book_id) ? params[:book_id] : @selected_book_id),
+              { include_blank: "すべて" },
+              class: "form-select form-select-sm",
+              style: "min-width: 16rem;" %>
       </div>
       <div class="d-flex gap-2 flex-shrink-0 align-self-end">
         <%= f.submit "適用", class: "btn btn-outline-secondary btn-sm" %>
@@ -61,7 +61,13 @@
         </thead>
         <tbody>
           <% @receipt_details.each do |detail| %>
-            <tr>
+            <tr
+              data-controller="clickable-row"
+              data-clickable-row-url-value="<%= edit_receipt_detail_path(detail) %>"
+              data-action="click->clickable-row#go keydown->clickable-row#goWithKeyboard"
+              tabindex="0"
+              role="link"
+              class="cursor-pointer">
               <td><%= detail.receipt_name.presence || detail.receipt_id %></td>
               <td><%= detail.item_code %></td>
               <td><%= detail.item_name %></td>
@@ -71,7 +77,6 @@
             <td class="text-end">
                 <div class="d-inline-flex gap-1 flex-nowrap">
                   <%= link_to "詳細", detail, class: "btn btn-outline-secondary btn-sm" %>
-                  <%= link_to "編集", edit_receipt_detail_path(detail), class: "btn btn-outline-primary btn-sm" %>
                   <%= button_to "削除", detail, method: :delete, form: { data: { turbo_confirm: "この明細を削除しますか？" }, class: "d-inline" }, class: "btn btn-outline-danger btn-sm" %>
                 </div>
             </td>

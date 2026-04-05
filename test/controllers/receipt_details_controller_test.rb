@@ -8,6 +8,9 @@ class ReceiptDetailsControllerTest < ActionDispatch::IntegrationTest
   test "should get index" do
     get receipt_details_url
     assert_response :success
+
+    assert_select "tbody tr[data-controller='clickable-row'][data-clickable-row-url-value]"
+    assert_select "a", text: "編集", count: 0
   end
 
   test "should get summary" do
