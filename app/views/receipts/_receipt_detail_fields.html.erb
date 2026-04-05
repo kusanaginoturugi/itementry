@@ -24,7 +24,12 @@
       </div>
       <div class="col-md-2">
         <%= f.label :count, "個数", class: "form-label" %>
-        <%= f.number_field :count, class: "form-control", min: 0, step: 1, required: true, data: { action: "input->receipt-form#recalculate" } %>
+        <%= f.text_field :count,
+          class: "form-control",
+          required: true,
+          inputmode: "numeric",
+          pattern: "\\d*",
+          data: { action: "input->receipt-form#recalculate" } %>
       </div>
       <div class="col-md-2">
         <%= f.label :value, "単価", class: "form-label" %>

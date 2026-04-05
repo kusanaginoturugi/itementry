@@ -123,6 +123,16 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
     assert_not_nil link
   end
 
+  test "new uses text input for count field to allow selecting default value" do
+    get new_receipt_url
+    assert_response :success
+
+    count_field = css_select("input[name='receipt[receipt_details_attributes][0][count]']").first
+    assert_not_nil count_field
+    assert_equal "text", count_field["type"]
+    assert_equal "numeric", count_field["inputmode"]
+  end
+
   test "edit form skips tab stop for fixed price items" do
     receipt = Receipt.create!(name: "30")
     receipt.receipt_details.create!(

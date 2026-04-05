@@ -179,7 +179,10 @@ export default class extends Controller {
     await this.fillItemByCode(detail, code)
 
     const countField = detail.querySelector("input[name*='[count]']")
-    if (countField) countField.focus()
+    if (countField) {
+      countField.focus()
+      countField.select()
+    }
 
     this.recalculate()
   }
