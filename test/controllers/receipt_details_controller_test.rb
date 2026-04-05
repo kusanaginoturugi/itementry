@@ -126,9 +126,9 @@ class ReceiptDetailsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal "text/csv", response.media_type
     filename = response.headers["Content-Disposition"] || response.headers["content-disposition"]
-    encoded_label = ERB::Util.url_encode(ApplicationHelper::ITEM_TYPE_LABELS[item_a.item_type])
+    encoded_label = ERB::Util.url_encode(ITEM_TYPE_LABELS[item_a.item_type])
     assert filename.present?
-    assert filename.include?(encoded_label) || filename.include?(ApplicationHelper::ITEM_TYPE_LABELS[item_a.item_type])
+    assert filename.include?(encoded_label) || filename.include?(ITEM_TYPE_LABELS[item_a.item_type])
 
     lines = response.body.split("\n")
     assert_equal "item_code,item_name,total_count,total_value,refund,total_sum_refund,total_sum_payment", lines.first

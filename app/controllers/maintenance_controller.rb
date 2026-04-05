@@ -7,7 +7,8 @@ class MaintenanceController < ApplicationController
     task.reenable
     task.invoke
     redirect_back fallback_location: root_path, notice: "レシート明細を更新しました。"
-  rescue StandardError => e
+  rescue Rake::TaskNotFound, ActiveRecord::RecordInvalid => e
+    Rails.logger.error("receipt_details_refresh failed: #{e.class} #{e.message}\n#{e.backtrace.first(5).join("\n")}")
     redirect_back fallback_location: root_path, alert: "更新に失敗しました: #{e.message}"
   end
 

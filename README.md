@@ -28,6 +28,18 @@ bin/dev          # Rails サーバー起動
 - **レシート明細 (receipt_details)**: 数量・単価・小計を管理。固定価格の商品はマスター単価を強制。
 - **CSVインポート**: `lib/tasks/items_import.rake` の Rake タスクで `db/items3.csv` をインポートし商品を置き換え。
 
+## 商品種類（item_type）
+
+商品には種類（item_type）が整数コードで紐づく。種類の一覧とラベルは `config/item_types.yml` で管理しており、アプリ再起動なしに変更可能。
+
+```yaml
+0: 聖明王院
+1: 護摩センター
+...
+```
+
+商品コードの先頭1桁が item_type に対応している（例: コード `1xxx` → 種類1「護摩センター」）。
+
 ## テスト
 
 ```bash

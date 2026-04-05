@@ -188,7 +188,7 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
 
     assert_select "select[data-receipt-form-target='itemTypeFilter']" do
       assert_select "option[value='']", text: "すべて"
-      ApplicationHelper::ITEM_TYPE_LABELS.each do |value, label|
+      ITEM_TYPE_LABELS.each do |value, label|
         assert_select "option[value='#{value}']", text: label
       end
     end

@@ -1,16 +1,4 @@
 module ApplicationHelper
-  ITEM_TYPE_LABELS = {
-    0 => "聖明王院",
-    1 => "護摩センター",
-    2 => "護摩センター2",
-    3 => "観音堂",
-    4 => "天通新聞社",
-    5 => "太明星",
-    6 => "加賀御神水",
-    7 => "祈願会等",
-    8 => "挙行費"
-  }.freeze
-
   def item_type_options
     ITEM_TYPE_LABELS.map { |value, label| [ label, value ] }
   end
