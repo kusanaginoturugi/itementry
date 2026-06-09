@@ -2,12 +2,11 @@
 set -euxo pipefail
 
 APP_ROOT="/home/admin/itementry"
-RUBY_BIN="/home/admin/.local/share/mise/installs/ruby/3.4.7/bin"
-
 cd "$APP_ROOT"
 
 export HOME="/home/admin"
-export PATH="$RUBY_BIN:$PATH"
+export PATH="/home/admin/.local/share/mise/bin:/home/admin/.local/bin:$PATH"
+eval "$(mise activate bash)"
 export RAILS_ENV="production"
 export BUNDLE_GEMFILE="$APP_ROOT/Gemfile"
 export BUNDLE_PATH="$APP_ROOT/vendor/bundle"
