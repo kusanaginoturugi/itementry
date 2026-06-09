@@ -226,3 +226,10 @@ Rails.cache で短期キャッシュするとパフォーマンスが改善す�
 - 入金報告書は帳票フィルタに対応し、HTML・CSV・PDFを出力できる。
 - 検証結果: `PARALLEL_WORKERS=1 bin/rails test`は103件・298 assertions・失敗0。RuboCop違反なし。
 - 本番反映時は`bin/rails db:migrate`を実行する。
+## 2026-06-09 scan_ruby修正記録
+
+- 原因は`Brakeman`ではなく`bundler-audit`による既知脆弱性検出。
+- Railsを8.1.3、Pumaを8.0.2、Rackを3.2.6へ更新した。
+- Nokogiri、Addressable、ERB、JSON、Loofah、net-imap、rack-sessionも安全版へ更新した。
+- 最新の`ruby-advisory-db`で`No vulnerabilities found`を確認した。
+- `HOME=/tmp PARALLEL_WORKERS=1 bin/ci`は全項目成功。Railsテストは103件・300 assertions・失敗0。

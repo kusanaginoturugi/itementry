@@ -156,4 +156,10 @@ https://item.rakuten.co.jp/tsurunooshiro/rmdy02/
 - [x] 商品画面へ入金報告グループの編集・表示を追加
 - [x] モデル・コントローラ・Rakeタスクのテストを追加
 - [x] 全テストとRuboCopを実行
+## 2026-06-09 scan_ruby修正
+
+- [x] GitHub Actionsの`scan_ruby`失敗ログを確認
+- [x] 脆弱性が報告された依存gemを安全版へ更新
+- [x] 最新advisory DBで`bundler-audit`を再実行
+- [x] `bin/ci`を実行
 
