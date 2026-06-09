@@ -14,7 +14,7 @@ export BUNDLE_PATH="$APP_ROOT/vendor/bundle"
 git config core.fileMode false
 
 git fetch origin
-git pull --ff-only origin main
+git reset --hard origin/main
 
 bundle config set deployment true
 bundle config set without 'development test'
