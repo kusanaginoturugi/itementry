@@ -8,7 +8,7 @@ on:
 
 jobs:
   scan_ruby:
-    runs-on: admin-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -27,7 +27,7 @@ jobs:
         run: bin/bundler-audit
 
   scan_js:
-    runs-on: admin-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -43,7 +43,7 @@ jobs:
         run: bin/importmap audit
 
   lint:
-    runs-on: admin-latest
+    runs-on: ubuntu-latest
     env:
       RUBOCOP_CACHE_ROOT: tmp/rubocop
     steps:
@@ -70,7 +70,7 @@ jobs:
         run: bin/rubocop -f github
 
   test:
-    runs-on: admin-latest
+    runs-on: ubuntu-latest
 
     # services:
     #  redis:
@@ -96,7 +96,7 @@ jobs:
         run: bin/rails db:test:prepare test
 
   system-test:
-    runs-on: admin-latest
+    runs-on: ubuntu-latest
 
     # services:
     #  redis:
@@ -137,7 +137,7 @@ jobs:
       - lint
       - test
       - system-test
-    runs-on: admin-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Deploy to production server
