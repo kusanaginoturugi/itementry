@@ -6,10 +6,12 @@ Rails.application.routes.draw do
   end
   root "receipts#index"
 
+  resources :report_groups, only: %i[ index edit update ]
   resources :receipt_details do
     collection do
       get :summary
       get :summary_by_item_type
+      get :payment_report
     end
   end
   resources :receipts

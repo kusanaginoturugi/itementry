@@ -29,6 +29,8 @@ class ItemsImportTaskTest < ActiveSupport::TestCase
     first_item = Item.find_by!(item_code: "000010")
     assert_equal "招財玉", first_item.name
     assert_equal 10, first_item.value
+    assert_equal 1, Item.find_by!(item_code: "102001").report_group_id
+    assert_equal 3, Item.find_by!(item_code: "205002").report_group_id
   end
 
   private

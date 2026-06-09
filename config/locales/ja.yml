@@ -1,10 +1,14 @@
 ja:
+  errors:
+    messages:
+      blank: "を入力してください"
   activerecord:
     models:
       book: 帳票
       item: 道具
       receipt: レシート
       receipt_detail: レシート明細
+      report_group: 入金報告グループ
     errors:
       messages:
         record_invalid: "バリデーションに失敗しました: %{errors}"
@@ -30,6 +34,10 @@ ja:
             sum_value: 小計
             sum_refund: 還付金合計
             sum_payment: 支払合計
+        report_group:
+          attributes:
+            name:
+              blank: "を入力してください"
     attributes:
       book:
         title: 帳票名
@@ -41,6 +49,11 @@ ja:
         value: 価格
         item_type: 道具種類
         refund: 還付金
+        report_group: 入金報告グループ
+        report_group_id: 入金報告グループ
+      report_group:
+        name: 名称
+        code: コード
   helpers:
     submit:
       create: "%{model} を作成"

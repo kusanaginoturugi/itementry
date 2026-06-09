@@ -217,3 +217,12 @@ Rails.cache で短期キャッシュするとパフォーマンスが改善す�
 3. **`ITEM_TYPE_LABELS` を設定ファイルへ移行** - ハードコードされた施設名を外出し
 4. **エラーハンドリングを精緻化** - 例外クラスを限定、ログ詳細化
 5. **CSV/PDF 生成の非同期化** - Active Job で UX 改善（大量データ時）
+## 2026-06-09 作業記録・引き継ぎ
+
+- `report_groups`を追加し、商品から任意で参照する構成にした。
+- グループ初期値は`db/report_groups.csv`、商品対応は`db/report_group_id.csv`から投入する。
+- `report_group_id.csv`の`205002`と`201004`は重複しているため、先に記載された専用グループを採用する。
+- 入金報告書は`item_type` 1・2を護摩センター、7・8を祈願会・内陣奉ト占として集計する。
+- 入金報告書は帳票フィルタに対応し、HTML・CSV・PDFを出力できる。
+- 検証結果: `PARALLEL_WORKERS=1 bin/rails test`は103件・298 assertions・失敗0。RuboCop違反なし。
+- 本番反映時は`bin/rails db:migrate`を実行する。

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_05_105913) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_09_000000) do
   create_table "books", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.boolean "is_lock", default: false, null: false
@@ -26,9 +26,11 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_05_105913) do
     t.integer "item_type", default: 1, null: false
     t.text "name", null: false
     t.integer "refund", default: 0, null: false
+    t.integer "report_group_id"
     t.datetime "updated_at", null: false
     t.integer "value", null: false
     t.index ["item_code"], name: "index_items_on_item_code", unique: true
+    t.index ["report_group_id"], name: "index_items_on_report_group_id"
   end
 
   create_table "receipt_details", force: :cascade do |t|
@@ -60,6 +62,14 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_05_105913) do
     t.index ["book_id"], name: "index_receipts_on_book_id"
   end
 
+  create_table "report_groups", force: :cascade do |t|
+    t.string "code"
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "items", "report_groups"
   add_foreign_key "receipt_details", "items"
   add_foreign_key "receipt_details", "receipts"
   add_foreign_key "receipts", "books"

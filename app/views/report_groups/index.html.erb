@@ -1,0 +1,34 @@
+<% content_for :title, "入金報告グループ" %>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h4 mb-0">入金報告グループ</h1>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0 align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>ID</th>
+          <th>名称</th>
+          <th>コード</th>
+          <th>商品数</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @report_groups.each do |report_group| %>
+          <tr>
+            <td><%= report_group.id %></td>
+            <td><%= report_group.name %></td>
+            <td><%= report_group.code %></td>
+            <td><%= report_group.items.size %></td>
+            <td class="text-end">
+              <%= link_to "編集", edit_report_group_path(report_group), class: "btn btn-outline-primary btn-sm" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

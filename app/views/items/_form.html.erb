@@ -35,6 +35,16 @@
       <%= form.text_area :name, class: "form-control", rows: 2, required: true %>
     </div>
 
+    <div class="mb-3">
+      <%= form.label :report_group_id, "入金報告グループ", class: "form-label" %>
+      <%= form.collection_select :report_group_id,
+            ReportGroup.order(:id),
+            :id,
+            :name,
+            { include_blank: "対象外" },
+            class: "form-select" %>
+    </div>
+
     <div class="row g-3">
       <div class="col-md-6">
         <%= form.label :value, "価格", class: "form-label" %>

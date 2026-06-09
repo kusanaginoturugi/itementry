@@ -5,7 +5,7 @@ class ItemsController < ApplicationController
 
   # GET /items or /items.json
   def index
-    @items = Item.order(order_clause)
+    @items = Item.includes(:report_group).order(order_clause)
   end
 
   def codes
@@ -81,7 +81,7 @@ class ItemsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def item_params
-      params.expect(item: [ :name, :value, :item_code, :is_variable_value, :item_type, :refund ])
+      params.expect(item: [ :name, :value, :item_code, :is_variable_value, :item_type, :refund, :report_group_id ])
     end
 
     def prefill_item_params

@@ -17,6 +17,9 @@
       </div>
     </div>
 
+    <p class="text-muted mb-1">入金報告グループ</p>
+    <p class="h6 mb-3"><%= item.report_group&.name || "対象外" %></p>
+
     <p class="text-muted mb-1">価格</p>
     <p class="h4 fw-bold mb-3"><%= number_with_delimiter(item.value) %></p>
 

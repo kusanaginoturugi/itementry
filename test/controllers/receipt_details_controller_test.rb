@@ -1,6 +1,50 @@
 require "test_helper"
 
 class ReceiptDetailsControllerTest < ActionDispatch::IntegrationTest
+  test "payment report splits center and prayer totals by report group" do
+    group = report_groups(:goma_wood)
+    center_item = Item.create!(
+      item_code: "100001",
+      name: "護摩センター商品",
+      value: 100,
+      item_type: 1,
+      refund: 0,
+      report_group: group
+    )
+    prayer_item = Item.create!(
+      item_code: "700001",
+      name: "祈願会商品",
+      value: 200,
+      item_type: 7,
+      refund: 0,
+      report_group: group
+    )
+    receipt = Receipt.create!(name: "99", book: books(:unclassified))
+    receipt.receipt_details.create!(item: center_item, item_code: center_item.item_code, item_name: center_item.name, count: 2, value: 100)
+    receipt.receipt_details.create!(item: prayer_item, item_code: prayer_item.item_code, item_name: prayer_item.name, count: 3, value: 200)
+
+    get payment_report_receipt_details_url(book_id: books(:unclassified).id)
+
+    assert_response :success
+    assert_select "tbody tr" do |rows|
+      row = rows.find { |candidate| candidate.text.include?(group.name) }
+      assert_includes row.text, "2"
+      assert_includes row.text, "200"
+      assert_includes row.text, "3"
+      assert_includes row.text, "600"
+      assert_includes row.text, "5"
+      assert_includes row.text, "800"
+    end
+  end
+
+  test "payment report csv is downloadable" do
+    get payment_report_receipt_details_url(format: :csv)
+
+    assert_response :success
+    assert_includes response.body, "護摩センター"
+    assert_includes response.body, report_groups(:goma_wood).name
+  end
+
   setup do
     @receipt_detail = receipt_details(:one)
   end
