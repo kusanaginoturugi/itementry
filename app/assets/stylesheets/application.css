@@ -9,6 +9,119 @@
  * Consider organizing styles into separate files for maintainability.
  */
 
+/*
+ * Bootstrap 5 の theme color を osystem 共通デザイン (osystem/design/base.css の
+ * 紫アクセント + 青みグレー) に寄せる。view の Bootstrap クラス名は触らない。
+ * Bootstrap は CDN から読み込んでいるため SCSS 経由の差替えはできず、
+ * 公開されている --bs-* 変数だけを上書きしている。
+ */
+:root {
+  --bs-body-bg: #f7f9fd;
+  --bs-body-color: #495567;
+  --bs-border-color: #d7dfef;
+  --bs-border-color-translucent: rgba(127, 136, 160, 0.18);
+
+  --bs-primary: #b7a6d9;
+  --bs-primary-rgb: 183, 166, 217;
+  --bs-primary-text-emphasis: #5c4d80;
+  --bs-primary-bg-subtle: #f3e6f2;
+  --bs-primary-border-subtle: #dac8e8;
+
+  --bs-secondary: #7d88a0;
+  --bs-secondary-rgb: 125, 136, 160;
+  --bs-secondary-text-emphasis: #495567;
+  --bs-secondary-bg-subtle: #edf2fb;
+  --bs-secondary-border-subtle: #d7dfef;
+
+  --bs-success: #7f97be;
+  --bs-success-rgb: 127, 151, 190;
+  --bs-success-text-emphasis: #3f5b80;
+  --bs-success-bg-subtle: #eef2f8;
+  --bs-success-border-subtle: #c5d2e1;
+
+  --bs-danger: #b46a6a;
+  --bs-danger-rgb: 180, 106, 106;
+  --bs-danger-text-emphasis: #774545;
+  --bs-danger-bg-subtle: #f8eaea;
+  --bs-danger-border-subtle: #e6c1c1;
+
+  --bs-light: #edf2fb;
+  --bs-light-rgb: 237, 242, 251;
+  --bs-dark: #2a3344;
+  --bs-dark-rgb: 42, 51, 68;
+
+  --bs-link-color: #907fc0;
+  --bs-link-color-rgb: 144, 127, 192;
+  --bs-link-hover-color: #b7a6d9;
+  --bs-link-hover-color-rgb: 183, 166, 217;
+
+  --bs-secondary-color: #7d88a0; /* text-muted で参照される */
+}
+
+/*
+ * Bootstrap 5 はコンポーネント側で色値をハードコードしている
+ * (.btn-primary { --bs-btn-bg: #0d6efd } 等)。
+ * --bs-primary だけ書き換えても反映されないので、コンポーネント側も上書きする。
+ */
+.btn-primary {
+  --bs-btn-bg: var(--bs-primary);
+  --bs-btn-border-color: var(--bs-primary);
+  --bs-btn-hover-bg: #907fc0;
+  --bs-btn-hover-border-color: #907fc0;
+  --bs-btn-active-bg: #907fc0;
+  --bs-btn-active-border-color: #907fc0;
+  --bs-btn-disabled-bg: var(--bs-primary);
+  --bs-btn-disabled-border-color: var(--bs-primary);
+}
+
+.btn-secondary {
+  --bs-btn-bg: var(--bs-secondary);
+  --bs-btn-border-color: var(--bs-secondary);
+  --bs-btn-hover-bg: #5e6a82;
+  --bs-btn-hover-border-color: #5e6a82;
+  --bs-btn-active-bg: #5e6a82;
+  --bs-btn-active-border-color: #5e6a82;
+  --bs-btn-disabled-bg: var(--bs-secondary);
+  --bs-btn-disabled-border-color: var(--bs-secondary);
+}
+
+.btn-danger {
+  --bs-btn-bg: var(--bs-danger);
+  --bs-btn-border-color: var(--bs-danger);
+  --bs-btn-hover-bg: #925757;
+  --bs-btn-hover-border-color: #925757;
+  --bs-btn-active-bg: #925757;
+  --bs-btn-active-border-color: #925757;
+  --bs-btn-disabled-bg: var(--bs-danger);
+  --bs-btn-disabled-border-color: var(--bs-danger);
+}
+
+.alert-success {
+  --bs-alert-color: var(--bs-success-text-emphasis);
+  --bs-alert-bg: var(--bs-success-bg-subtle);
+  --bs-alert-border-color: var(--bs-success-border-subtle);
+  --bs-alert-link-color: var(--bs-success-text-emphasis);
+}
+
+.alert-danger {
+  --bs-alert-color: var(--bs-danger-text-emphasis);
+  --bs-alert-bg: var(--bs-danger-bg-subtle);
+  --bs-alert-border-color: var(--bs-danger-border-subtle);
+  --bs-alert-link-color: var(--bs-danger-text-emphasis);
+}
+
+.table-light {
+  --bs-table-bg: var(--bs-light);
+  --bs-table-color: var(--bs-body-color);
+  --bs-table-border-color: var(--bs-border-color);
+}
+
+.table-secondary {
+  --bs-table-bg: var(--bs-secondary-bg-subtle);
+  --bs-table-color: var(--bs-secondary-text-emphasis);
+  --bs-table-border-color: var(--bs-secondary-border-subtle);
+}
+
 .receipt-form-sticky-header {
   position: sticky;
   top: 0;
