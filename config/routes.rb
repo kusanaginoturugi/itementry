@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   end
   root "receipts#index"
 
-  resources :report_groups, only: %i[ index edit update ]
+  resources :report_groups, only: %i[ index new create edit update ]
   resources :receipt_details do
     collection do
       get :summary
@@ -16,6 +16,10 @@ Rails.application.routes.draw do
   end
   resources :receipts
   resources :items do
+    member do
+      patch :activate
+    end
+
     collection do
       get :lookup
       get :codes

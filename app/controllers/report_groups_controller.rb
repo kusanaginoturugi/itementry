@@ -5,7 +5,21 @@ class ReportGroupsController < ApplicationController
     @report_groups = ReportGroup.order(:id)
   end
 
+  def new
+    @report_group = ReportGroup.new
+  end
+
   def edit
+  end
+
+  def create
+    @report_group = ReportGroup.new(report_group_params)
+
+    if @report_group.save
+      redirect_to report_groups_path, notice: "入金報告グループを登録しました。"
+    else
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def update

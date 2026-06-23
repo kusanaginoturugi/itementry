@@ -1,6 +1,6 @@
 class ItemsController < ApplicationController
   layout "plain", only: :codes
-  before_action :set_item, only: %i[ show edit update destroy ]
+  before_action :set_item, only: %i[ show edit update destroy activate ]
   helper_method :current_sort_column, :current_sort_direction, :toggle_direction_for
 
   # GET /items or /items.json
@@ -9,7 +9,7 @@ class ItemsController < ApplicationController
   end
 
   def codes
-    @items = Item.order(:item_code)
+    @items = Item.active.order(:item_code)
   end
 
   # GET /items/1 or /items/1.json
@@ -17,7 +17,7 @@ class ItemsController < ApplicationController
   end
 
   def lookup
-    item = Item.find_by(item_code: params[:item_code])
+    item = Item.active.find_by(item_code: params[:item_code])
     if item
       render json: item.slice(:id, :name, :value, :item_code, :is_variable_value)
     else
@@ -65,11 +65,20 @@ class ItemsController < ApplicationController
 
   # DELETE /items/1 or /items/1.json
   def destroy
-    @item.destroy!
+    @item.update!(is_active: false)
 
     respond_to do |format|
-      format.html { redirect_to items_path, notice: "商品を削除しました。", status: :see_other }
+      format.html { redirect_to items_path, notice: "道具を無効化しました。", status: :see_other }
       format.json { head :no_content }
+    end
+  end
+
+  def activate
+    @item.update!(is_active: true)
+
+    respond_to do |format|
+      format.html { redirect_to items_path, notice: "道具を有効化しました。", status: :see_other }
+      format.json { render :show, status: :ok, location: @item }
     end
   end
 
@@ -81,7 +90,7 @@ class ItemsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def item_params
-      params.expect(item: [ :name, :value, :item_code, :is_variable_value, :item_type, :refund, :report_group_id ])
+      params.expect(item: [ :name, :value, :item_code, :is_variable_value, :is_active, :item_type, :refund, :report_group_id ])
     end
 
     def prefill_item_params
@@ -96,7 +105,7 @@ class ItemsController < ApplicationController
     end
 
     def current_sort_column
-      %w[item_code name value item_type refund].include?(params[:sort]) ? params[:sort] : "item_code"
+      %w[item_code name value item_type refund is_active].include?(params[:sort]) ? params[:sort] : "item_code"
     end
 
     def current_sort_direction
