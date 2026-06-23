@@ -78,7 +78,7 @@ class ReceiptsController < ApplicationController
     end
 
     def set_items
-      @items = Item.order(:item_code)
+      @items = Item.active.order(:item_code)
     end
 
     def set_books

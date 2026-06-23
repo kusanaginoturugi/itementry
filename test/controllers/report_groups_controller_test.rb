@@ -6,6 +6,24 @@ class ReportGroupsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "td", text: report_groups(:goma_wood).name
+    assert_select "a", text: "新規登録"
+  end
+
+  test "should get new" do
+    get new_report_group_url
+
+    assert_response :success
+  end
+
+  test "creates report group" do
+    assert_difference("ReportGroup.count") do
+      post report_groups_url, params: {
+        report_group: { name: "新規グループ", code: "N01" }
+      }
+    end
+
+    assert_redirected_to report_groups_url
+    assert_equal "N01", ReportGroup.last.code
   end
 
   test "updates report group" do

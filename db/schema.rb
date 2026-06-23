@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_09_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_23_000000) do
   create_table "books", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.boolean "is_lock", default: false, null: false
@@ -21,6 +21,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_09_000000) do
 
   create_table "items", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.boolean "is_active", default: true, null: false
     t.boolean "is_variable_value", default: false, null: false
     t.text "item_code", default: "", null: false
     t.integer "item_type", default: 1, null: false

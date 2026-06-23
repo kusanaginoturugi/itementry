@@ -51,6 +51,7 @@ ja:
         refund: 還付金
         report_group: 入金報告グループ
         report_group_id: 入金報告グループ
+        is_active: 状態
       report_group:
         name: 名称
         code: コード

@@ -51,6 +51,16 @@ class ItemsControllerTest < ActionDispatch::IntegrationTest
     assert_select "[data-item-filter-target='card'][data-item-type='#{items(:one).item_type}']", minimum: 1
   end
 
+  test "codes view hides inactive items" do
+    @item.update!(is_active: false)
+
+    get codes_items_url
+    assert_response :success
+
+    card_codes = css_select(".text-monospace.fw-bold").map { |node| node.text.strip }
+    assert_not_includes card_codes, @item.item_code
+  end
+
   test "should get new" do
     get new_item_url
     assert_response :success
@@ -86,11 +96,29 @@ class ItemsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to item_url(@item)
   end
 
-  test "should destroy item" do
-    assert_difference("Item.count", -1) do
+  test "should deactivate item" do
+    assert_no_difference("Item.count") do
       delete item_url(@item)
     end
 
     assert_redirected_to items_url
+    assert_not @item.reload.is_active?
+  end
+
+  test "should activate item" do
+    @item.update!(is_active: false)
+
+    patch activate_item_url(@item)
+
+    assert_redirected_to items_url
+    assert @item.reload.is_active?
+  end
+
+  test "lookup does not return inactive item" do
+    @item.update!(is_active: false)
+
+    get lookup_items_url(format: :json), params: { item_code: @item.item_code }
+
+    assert_response :not_found
   end
 end
