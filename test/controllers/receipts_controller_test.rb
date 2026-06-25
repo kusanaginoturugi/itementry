@@ -1,4 +1,5 @@
 require "test_helper"
+require "csv"
 
 class ReceiptsControllerTest < ActionDispatch::IntegrationTest
   setup do
@@ -90,6 +91,33 @@ class ReceiptsControllerTest < ActionDispatch::IntegrationTest
 
     names = css_select("table tbody tr td:first-child").map { |td| td.text.strip }
     assert_equal [ "1", "2" ], names
+  end
+
+  test "index csv exports visible rows" do
+    ReceiptDetail.delete_all
+    Receipt.delete_all
+
+    r1 = Receipt.create!(name: "1", book: books(:unclassified))
+    r1.receipt_details.create!(item: items(:one), item_code: "001", item_name: "A", count: 1, value: 100, sum_value: 100)
+    r1.receipt_details.create!(item: items(:two), item_code: "002", item_name: "B", count: 1, value: 100, sum_value: 100)
+    r1.update_columns(total_count: 2, total_value: 200)
+
+    r2 = Receipt.create!(name: "2", book: books(:unclassified))
+    r2.receipt_details.create!(item: items(:one), item_code: "001", item_name: "A", count: 1, value: 300, sum_value: 300)
+    r2.update_columns(total_count: 1, total_value: 300)
+
+    Receipt.create!(name: "3", book: books(:public_book))
+
+    get receipts_url(format: :csv), params: { sort: "total_value", direction: "asc" }
+    assert_response :success
+    assert_equal "text/csv", response.media_type
+    assert_match(/filename\*=UTF-8''receipts-%E6%9C%AA%E5%88%86%E9%A1%9E-\d{14}\.csv/, response.headers["Content-Disposition"])
+
+    rows = CSV.parse(response.body, headers: true)
+    assert_equal [ "レシート名", "行数", "金額" ], rows.headers
+    assert_equal [ "1", "2" ], rows.map { |row| row["レシート名"] }
+    assert_equal [ "2", "1" ], rows.map { |row| row["行数"] }
+    assert_equal [ "200", "300" ], rows.map { |row| row["金額"] }
   end
 
   test "should get new" do

@@ -1,3 +1,5 @@
+require "csv"
+
 class ReceiptsController < ApplicationController
   before_action :set_receipt, only: %i[ show edit update destroy ]
   before_action :set_receipt_navigation, only: %i[ show ]
@@ -16,6 +18,15 @@ class ReceiptsController < ApplicationController
     @line_counts_by_receipt = ReceiptDetail.where(receipt_id: @receipts).group(:receipt_id).count
     @line_counts_by_receipt.default = 0
     @line_counts_total = @line_counts_by_receipt.values.sum
+
+    respond_to do |format|
+      format.html
+      format.csv do
+        send_data build_csv(@receipts, @line_counts_by_receipt),
+                  filename: "receipts-#{csv_book_label}-#{Time.zone.now.strftime('%Y%m%d%H%M%S')}.csv",
+                  disposition: :attachment
+      end
+    end
   end
 
   # GET /receipts/1 or /receipts/1.json
@@ -121,6 +132,23 @@ class ReceiptsController < ApplicationController
       else
         { name: sort_direction }
       end
+    end
+
+    def build_csv(receipts, line_counts_by_receipt)
+      CSV.generate(headers: true) do |csv|
+        csv << [ "レシート名", "行数", "金額" ]
+        receipts.each do |receipt|
+          csv << [
+            receipt.name,
+            line_counts_by_receipt[receipt.id].to_i,
+            receipt.total_value
+          ]
+        end
+      end
+    end
+
+    def csv_book_label
+      @selected_book_id.present? ? @books.find(@selected_book_id).title : "all"
     end
 
     def available_books
