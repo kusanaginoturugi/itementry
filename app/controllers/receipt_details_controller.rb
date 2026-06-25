@@ -16,6 +16,15 @@ class ReceiptDetailsController < ApplicationController
       .joins(:receipt)
       .select("receipt_details.*, receipts.name AS receipt_name")
       .order(index_order_clause)
+
+    respond_to do |format|
+      format.html
+      format.csv do
+        send_data build_index_csv(@receipt_details),
+                  filename: "receipt_details-#{csv_book_label}-#{Time.zone.now.strftime('%Y%m%d%H%M%S')}.csv",
+                  disposition: :attachment
+      end
+    end
   end
 
   def summary
@@ -212,6 +221,26 @@ class ReceiptDetailsController < ApplicationController
 
     def index_order_clause
       "#{index_sort_column} #{index_sort_direction}"
+    end
+
+    def build_index_csv(rows)
+      CSV.generate(headers: true) do |csv|
+        csv << [ "レシート名", "道具コード", "道具名", "個数", "単価", "小計" ]
+        rows.each do |row|
+          csv << [
+            row.receipt_name.presence || row.receipt_id,
+            row.item_code,
+            row.item_name,
+            row.count,
+            row.value,
+            row.sum_value
+          ]
+        end
+      end
+    end
+
+    def csv_book_label
+      @selected_book_id.present? ? @books.find(@selected_book_id).title : "all"
     end
 
     def summary_sort_direction

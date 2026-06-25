@@ -1,4 +1,5 @@
 require "test_helper"
+require "csv"
 
 class ReceiptDetailsControllerTest < ActionDispatch::IntegrationTest
   test "payment report splits center and prayer totals by report group" do
@@ -88,6 +89,39 @@ class ReceiptDetailsControllerTest < ActionDispatch::IntegrationTest
     assert_select "input[name='item_name'][value='金']"
     names = css_select("tbody tr td:nth-child(3)").map { |td| td.text.strip }
     assert_equal [ "金槌" ], names
+  end
+
+  test "index csv exports visible rows with japanese headers" do
+    ReceiptDetail.delete_all
+    Receipt.delete_all
+    Item.delete_all
+
+    hammer = Item.create!(item_code: "100", name: "金槌", value: 100, item_type: 1, refund: 10, is_variable_value: false)
+    gold_saw = Item.create!(item_code: "200", name: "金のこぎり", value: 200, item_type: 2, refund: 20, is_variable_value: false)
+    public_item = Item.create!(item_code: "300", name: "金やすり", value: 300, item_type: 3, refund: 30, is_variable_value: false)
+
+    r1 = Receipt.create!(name: "10", book: books(:unclassified))
+    r1.receipt_details.create!(item: hammer, item_code: hammer.item_code, item_name: hammer.name, count: 1, value: 100)
+
+    r2 = Receipt.create!(name: "20", book: books(:unclassified))
+    r2.receipt_details.create!(item: gold_saw, item_code: gold_saw.item_code, item_name: gold_saw.name, count: 2, value: 200)
+
+    r3 = Receipt.create!(name: "30", book: books(:public_book))
+    r3.receipt_details.create!(item: public_item, item_code: public_item.item_code, item_name: public_item.name, count: 3, value: 300)
+
+    get receipt_details_url(format: :csv), params: { item_name: "金", sort: "sum_value", direction: "desc" }
+    assert_response :success
+    assert_equal "text/csv", response.media_type
+    assert_match(/filename\*=UTF-8''receipt_details-%E6%9C%AA%E5%88%86%E9%A1%9E-\d{14}\.csv/, response.headers["Content-Disposition"])
+
+    rows = CSV.parse(response.body, headers: true)
+    assert_equal [ "レシート名", "道具コード", "道具名", "個数", "単価", "小計" ], rows.headers
+    assert_equal [ "20", "10" ], rows.map { |row| row["レシート名"] }
+    assert_equal [ "200", "100" ], rows.map { |row| row["道具コード"] }
+    assert_equal [ "金のこぎり", "金槌" ], rows.map { |row| row["道具名"] }
+    assert_equal [ "2", "1" ], rows.map { |row| row["個数"] }
+    assert_equal [ "200", "100" ], rows.map { |row| row["単価"] }
+    assert_equal [ "400", "100" ], rows.map { |row| row["小計"] }
   end
 
   test "summary can sort by total_value desc" do
